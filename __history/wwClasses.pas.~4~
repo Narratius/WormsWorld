@@ -22,10 +22,10 @@ Type
  TwwThing = class(TObject)
  private
   f_Points: TObjectList;
-  f_IsDead: Boolean;
-  f_Caption: String;
-  f_Direction: TwwDirection;
-  f_Entity: TwwEntity;
+    f_IsDead: Boolean;
+    f_Caption: String;
+    f_Direction: TwwDirection;
+    f_Entity: TwwEntity;
   FVariety: Integer;
   FWorld: TwwWorld;
   FAge: Integer;

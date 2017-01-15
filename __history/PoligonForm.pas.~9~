@@ -51,7 +51,7 @@ implementation
 
 {$R *.dfm}
 Uses
- Types, wwClasses, wwTypes, wwUtils;
+ Types, wwClasses, wwTypes;
 
 procedure TForm1.StartButtonClick(Sender: TObject);
 var
@@ -133,7 +133,6 @@ begin
     itm.SubItems.Strings[2]:= IntToStr(FWorld.Worms[i].Mind.Weight)+'%';
    end; // for i
    MapGrid.Invalidate;
-   WorldPaintBox.Invalidate;
    Application.ProcessMessages;
    Sleep(25);
   until FCancel;
@@ -180,7 +179,6 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
- DoubleBuffered:= True;
  Randomize;
  ClientHeight:= GroupBox2.Top+GroupBox2.Height+10;
  //Width:=550;
@@ -196,7 +194,6 @@ procedure TForm1.MapGridDrawCell(Sender: TObject; ACol, ARow: Integer;
 var
  l_T: TwwThing;
 begin
-{
  if not FCancel and FMapVisible then
  begin
   MapGrid.Canvas.Brush.Color:= clWhite;
@@ -210,7 +207,6 @@ begin
   end; // l_T <> nil
   MapGrid.Canvas.FillRect(Rect);
  end; // FCancel
-}
 end;
 
 procedure TForm1.NewIdea(Sender: TObject);
@@ -225,53 +221,10 @@ var
  l_T: TwwThing;
  i, j: Integer;
  l_Rect: TRect;
- k, l_What: Integer;
- Y: Single;
- l_Draw: Boolean;
 begin
  if not FCancel and FMapVisible then
  begin
-  l_Rect:= WorldPaintBox.ClientRect;
-  WorldPaintBox.Canvas.Brush.Color:= clGray;
-  WorldPaintBox.Canvas.FillRect(l_Rect);
-
-  j:= 0;
-  for i:= 0 to Pred(FWorld.Count) do
-  begin
-  begin
-   l_T:= FWorld.Things[i];
-
-   if not l_T.IsDead then
-   begin
-    for k:= 0 to Pred(l_T.Length) do
-    begin
-     if (k > 0) then
-      l_Draw:= not wwUtils.Equal(l_T.Points[k].Position, l_T.Points[Pred(k)].Position)
-     else
-      l_Draw:= True;
-     if l_Draw then
-     begin
-      l_Rect.Left:= l_T.Points[k].Position.X*16;
-      l_Rect.Top:= l_T.Points[k].Position.Y*16;
-      WormsImageList.Draw(WorldPaintBox.Canvas, l_Rect.Left, l_Rect.Top, 2+l_T.Points[k].Value);
-     end;
-    end;
-   end;
-  end;
-   (*
-   if FWormsField.Things[i] is TwwWorm then
-   begin
-    Y:= Game.Height-16;
-    with FWormsField.Things[i] as TwwWorm do
-     GV_Font_Print(Font,  i*(Game.Width div FWormsField.WormsCount), Y, WormColors[i],
-       '%s: %d (Max:%d) for %d', [Caption, Length, Mind.MaxThingLength, Age]);
-    Inc(j);
-   end;
-   *)
-  end;
-
-
- (*
+  MapGrid.Canvas.Brush.Color:= clWhite;
   for I := 0 to Pred(FWorld.Size.Width) do
     for j := 0 to Pred(FWOrld.Size.Height) do
     begin
@@ -279,25 +232,18 @@ begin
       l_Rect.Top:= j*16;
       l_Rect.Width:= 16;
       l_Rect.Height:= 16;
-      WorldPaintBox.Canvas.Brush.Color:= clGray;
       l_T:= FWorld.ThingAt(Point(i, j));
       if l_T <> nil then
       begin
        if l_T.Entity = weLive then
-       begin
-       // WorldPaintBox.Canvas.Brush.Color:= WormColor[l_T.Variety]
-         WormsImageList.Draw(WorldPaintBox.Canvas, l_Rect.Left, l_Rect.Top, );
-       end
+        WorldPaintBox.Canvas.Brush.Color:= WormColor[l_T.Variety]
        else
-       begin
-        //WorldPaintBox.Canvas.Brush.Color:= TargetColor[l_T.Variety];
-        WormsImageList.Draw(WorldPaintBox.Canvas, l_Rect.Left, l_Rect.Top, l_T.Variety);
-       end;
-      end
-      else // l_T <> nil
-       WorldPaintBox.Canvas.FillRect(l_Rect);
-    end; // for j
-  *)
+        WorldPaintBox.Canvas.Brush.Color:= TargetColor[l_T.Variety];
+      end; // l_T <> nil
+      WorldPaintBox.Canvas.FillRect(l_Rect);
+    end;
+
+
  end; // FCancel
 end;
 
