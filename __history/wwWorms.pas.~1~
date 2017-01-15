@@ -1,0 +1,244 @@
+unit wwWorms;
+
+interface
+Uses
+ Types,
+ wwClasses, wwTypes, wwMinds;
+
+type
+  TwwTarget = class (TwwThing)
+  private
+    f_Power: Integer;
+    FPower: Integer;
+  public
+    constructor Create(aWorld: TwwWorld); reintroduce;
+    procedure Ressurect; override;
+    property Power: Integer read FPower;
+  end;
+
+  TwwWorm = class (TwwThing)
+  private
+    f_Mind: TwwMind;
+    f_MindCenter: TwwMindCenter;
+    FTarget: TwwThing;
+    FFavorite: TwwFavoriteType;
+    FStopTurns: Integer;
+    FTargetCount: Integer;
+    procedure FindTarget;
+  protected
+    function GetDefaultLenght: Integer;
+    function GetDefaultLength: Integer; override;
+    procedure Think; override;
+    procedure WhileStop; override;
+  public
+    constructor Create(aWorld: TwwWorld; aMindCenter: TwwMindCenter; aVariety:
+        Integer); reintroduce;
+    procedure Die; override;
+    function Eat(const aPOint: TPoint): Boolean; override;
+    function IsNeck(const aPoint: TPoint): Boolean;
+    procedure Ressurect; override;
+    function ToHead(A: TPoint): TDirection;
+    function ToTail(A: TPoint): TDirection;
+    function ToNeck: TDirection;
+    property Favorite: TwwFavoriteType read FFavorite write FFavorite;
+    property Target: TwwThing read FTarget write FTarget;
+    property Mind: TwwMind
+     read f_Mind;
+    property TargetCount: Integer read FTargetCount;
+  end;
+
+implementation
+
+Uses
+ Math,
+ wwUtils;
+
+const
+ MinWormLength = 5;
+ TargetsVarieties : array[0..1] of Integer =  (0, 1);
+ TargetName : array[0..1] of String = ('Apple', 'Orange');
+ TargetPower : array[0..1] of Integer = (5, 3);
+ MaxStopTurns = 3;
+
+{ TwwWorm }
+
+{
+*********************************** TwwWorm ************************************
+}
+constructor TwwWorm.Create(aWorld: TwwWorld; aMindCenter: TwwMindCenter;
+    aVariety: Integer);
+begin
+  inherited Create(aWorld, MinWormLength);
+  Caption:= 'Worm';
+  Entity:= weLive;
+  f_MindCenter:= aMindCenter;
+  Variety:= aVariety;
+end;
+
+function TwwWorm.Eat(const aPOint: TPoint): Boolean;
+var
+ l_T: TwwThing;
+begin
+ // ѕроверить, €вл€етс€ ли данна€ точка нашей целью
+ if Equal(aPoint, Target.Head.Position) then
+ begin
+  Enlarge(TwwTarget(Target).Power);
+  Inc(FTargetCount);
+  Target.Die;
+  Target:= nil;
+  Result:= True;
+ end
+ else
+ begin
+  l_T:= World.ThingAt(aPoint);
+  Result:= (l_T = nil) or (l_T.Entity = weNotLive);
+ end; 
+end;
+
+function TwwWorm.GetDefaultLenght: Integer;
+begin
+  Result := MinWormLength;
+end;
+
+function TwwWorm.GetDefaultLength: Integer;
+begin
+  Result:= MinWormLength;
+end;
+
+function TwwWorm.IsNeck(const aPoint: TPoint): Boolean;
+begin
+  if Length > 1 then
+   Result:= IsMe(aPoint) and Equal(Points[1].Position, aPoint)
+  else
+   Result:= False;
+end;
+
+procedure TwwWorm.Ressurect;
+var
+ i: Integer;
+ {$IFNDEF Delphi7}
+ l_P: TPoint;
+ {$ENDIF}
+begin
+ inherited;
+ f_Mind:= f_MindCenter.RandomMind;
+ if f_Mind <> nil then
+ begin
+  Caption:= f_Mind.EnglishCaption;
+  Target:= f_Mind.FindTarget(Self) ;
+ end;
+ Head.Value:= ws_HeadL;
+ for i:= 1 to Length-2 do
+ begin
+  Points[i].Position:= Head.Position;
+  {$IFDEF Delphi7}
+  Points[i].Position.X:= Head.Position.X{ - i};
+  {$ELSE}
+  l_P:= Points[i].Position;
+  l_P.X:= Head.Position.X;
+  Points[i].Position:= l_P;
+  {$ENDIF}
+  Points[i].Value:= ws_BodyH;
+ end;
+ Tail.Position:= Head.Position;
+  {$IFDEF Delphi7}
+  Tail.Position.X:= Head.Position.X{ - i};
+  {$ELSE}
+  l_P:= Points[i].Position;
+  l_P.X:= Tail.Position.X;
+  Tail.Position:= l_P;
+  {$ENDIF}
+ Tail.Value:= ws_TailL;
+ FTargetCount:= 0;
+end;
+
+procedure TwwWorm.Think;
+begin
+ if f_Mind <> nil then
+  Direction:= f_Mind.Think(Self)
+ else
+  Direction:= dtNone;
+ if Direction <> dtStop then
+  FStopTurns:= 0;
+end;
+
+function TwwWorm.ToHead(A: TPoint): TDirection;
+var
+ l_Index: Integer;
+begin
+ Result:= dtStop;
+ l_Index:= PointIndex(A);
+ if (l_Index > 0) then
+  Result:= CalcDir(A, Points[Pred(l_Index)].Position, ftVertical)
+end;
+
+function TwwWorm.ToTail(A: TPoint): TDirection;
+var
+ l_IndexA, l_Tail: Integer;
+begin
+ Result:= dtStop;
+ l_IndexA:= PointIndex(A);
+ if (l_IndexA <> -1) and (l_IndexA < Length) then
+ begin
+  while Equal(A, Tail.Position) do
+  begin
+   Dec(l_IndexA);
+   A:= Points[l_IndexA].Position;
+  end;
+  while IsTurn(A, Points[Succ(l_IndexA)].Position) do
+  begin
+   Dec(l_IndexA);
+   A:= Points[l_IndexA].Position;
+  end;
+  Result:= CalcDir(A, Points[Succ(l_IndexA)].Position, ftVertical)
+ end;
+end;
+
+function TwwWorm.ToNeck: TDirection;
+begin
+ Result:= CalcDir(Head.Position, Points[1].Position, ftVertical)
+end;
+
+procedure TwwWorm.WhileStop;
+begin
+ Enlarge(-5);
+ Inc(FStopTurns);
+ if FStopTurns > MaxStopTurns then
+  Die;
+end;
+
+procedure TwwWorm.FindTarget;
+begin
+ if f_Mind <> nil then
+  Target:= f_Mind.FindTarget(Self) as TwwTarget;
+end;
+
+{ TwwTarget }
+
+{
+********************************** TwwTarget ***********************************
+}
+constructor TwwTarget.Create(aWorld: TwwWorld);
+begin
+  inherited Create(aWorld, 1);
+  Caption:= 'Target';
+  Entity:= weNotLive;
+end;
+
+procedure TwwTarget.Ressurect;
+begin
+  inherited;
+  Variety:= RandomFrom(TargetsVarieties);
+  Head.Value:= ws_Target;
+  Caption:= TargetName[Variety];
+  FPower:= TargetPower[Variety];
+end;
+
+procedure TwwWorm.Die;
+begin
+  inherited;
+ if f_Mind <> nil then
+  f_Mind.PostMorten(Self);
+end;
+
+end.
