@@ -1,0 +1,19 @@
+program WormsPoligon;
+
+{%DelphiDotNetAssemblyCompiler '$(SystemRoot)\microsoft.net\framework\v1.1.4322\System.Drawing.dll'}
+{%DelphiDotNetAssemblyCompiler 'c:\program files\common files\borland shared\bds\shared assemblies\2.0\Borland.Vcl.dll'}
+{%DelphiDotNetAssemblyCompiler 'c:\program files\common files\borland shared\bds\shared assemblies\2.0\Borland.Delphi.dll'}
+{%DelphiDotNetAssemblyCompiler 'c:\program files\common files\borland shared\bds\shared assemblies\2.0\Borland.VclRtl.dll'}
+{%DelphiDotNetAssemblyCompiler '$(SystemRoot)\Microsoft.NET\Framework\v1.1.4322\System.dll'}
+
+uses
+  Forms,
+  PoligonForm in 'PoligonForm.pas' {Form1};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.CreateForm(TForm1, Form1);
+  Application.Run;
+end.

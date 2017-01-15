@@ -1,0 +1,443 @@
+Unit wwMaratMinds;
+{ Мозги, придуманные Маратом }
+
+interface
+
+Uses
+ wwTypes, wwMinds, wwWorms;
+
+
+type
+  TCarefullMind = class (TwwMind)
+  protected
+    function GetCaption: string; override;
+    function GetEnglishCaption: string; override;
+    function Thinking: TwwDirection; override;
+  end;
+  
+  TImpudentMind = class (TwwMind)
+  protected
+    function GetCaption: string; override;
+    function GetEnglishCaption: string; override;
+    function Thinking: TwwDirection; override;
+  end;
+  
+  TCowardMind = class (TwwMind)
+  protected
+    function GetCaption: string; override;
+    function GetEnglishCaption: string; override;
+    function Thinking: TwwDirection; override;
+  end;
+  
+implementation
+
+Uses
+ Types, wwUtils;
+
+{
+******************************** TCarefullMind *********************************
+}
+function TCarefullMind.GetCaption: string;
+begin
+  Result:= 'Осторожный';
+end;
+
+function TCarefullMind.GetEnglishCaption: string;
+begin
+  Result:= 'Carefull'
+end;
+
+function TCarefullMind.Thinking: TwwDirection;
+var
+  l_W: TwwWorm;
+  NewHead: TPoint;
+  NewDir: TwwDirection;
+  LegalDirs: TwwDirections;
+
+  function LetsGo: Boolean;
+  var
+    I,J, N: Integer;
+    Test: Boolean;
+    LegDirs : set of TwwDirection;
+    NDir, NDir2: TwwDirection;
+    NHead, NHead2: TPoint;
+  begin
+    Test:= False;
+    if IsFree(NewHead) then
+    begin
+      N:= 0;
+      NDir:= NewDir;
+      LegDirs:= [dtLeft, dtUp, dtRight, dtDown];
+      NDir:= dtStop;
+      for I:= 1 to 4 do
+      begin
+        NDir:= Succ(NDir);
+        (* DD
+        NHead.X:= NewHead.X + Addition[NDir, aX];
+        NHead.Y:= NewHead.Y + Addition[NDir, aY];
+        *)
+        MovePoint(NewHead, NDir, NHead);
+        if IsFree(NHead) then
+        begin
+          NDir2:= dtStop;
+          for J:= 1 to 4 do
+          begin
+            NDir2:= ShiftDir(NDir2);
+            (* DD
+            NHead2.X:= NHead.X + Addition[NDir2, aX];
+            NHead2.Y:= NHead.Y + Addition[NDir2, aY];
+            *)
+            MovePoint(NHead, NDir2, NHead2);
+            if IsFree(NHead2) and not Equal(NHead2, NewHead) then
+              Test:= Test or True
+            else
+            begin
+              Test:= Test;
+            end;
+          end;
+        end;
+      end;
+    end
+    else Test:= False;
+    LetsGo:= Test;
+  end;
+  
+begin
+   l_W:= Thing as TwwWorm;
+   if l_W.Length < 50 then
+    l_W.Favorite:= InvertFavorite(l_W.Favorite);
+   NewDir:= CalcDir(l_W.Head.Position, l_W.Target.Head.Position, l_W.Favorite);
+   (* DD
+   case aWorm.Favorite of
+     ftVertical:
+     begin
+       if aWorm.Target.Points[0].Coordinate.Y <> aWorm.Head.Y then
+       begin
+         if aWorm.Target.Points[0].Coordinate.Y - aWorm.Head.Y > 0 then
+           NewDir:= dtDown
+         else
+           NewDir:= dtUp;
+       end
+       else
+       begin
+         if aWorm.Target.Points[0].Coordinate.X - aWorm.Head.X > 0 then
+           NewDir:= dtRight
+         else
+           NewDir:= dtLeft;
+       end;
+     end;
+     ftHorizontal:
+     begin
+       if aWorm.Target.Points[0].Coordinate.X <> aWorm.Head.X then
+       begin
+         if aWorm.Target.Points[0].Coordinate.X-aWorm.Head.X > 0 then
+           NewDir:= dtRight
+         else
+           NewDir:= dtLeft;
+       end
+       else
+       begin
+         if aWorm.Target.Points[0].Coordinate.Y-aWorm.Head.Y > 0 then
+           NewDir:= dtDown
+         else
+           NewDir:= dtUp;
+       end;
+     end;
+   end;
+   NewHead.X:= aWorm.Head.X + Addition[NewDir, aX];
+   NewHead.Y:= aWorm.Head.Y + Addition[NewDir, aY];
+   *)
+   MovePoint(l_W.Head.Position, NewDir, NewHead);
+   if l_W.IsMe(NewHead) then
+     if l_W.ToTail(NewHead) <> dtStop then
+       NewDir:= l_W.ToTail(NewHead);
+   (* DD
+   NewHead.X:= aWorm.Head.X + Addition[NewDir, aX];
+   NewHead.Y:= aWorm.Head.Y + Addition[NewDir, aY];
+   *)
+   MovePoint(l_W.Head.Position, NewDir, NewHead);
+   if not LetsGo then
+   begin
+     LegalDirs:= [dtLeft, dtUp, dtRight, dtDown];
+     repeat
+       Exclude(LegalDirs, NewDir);
+       NewDir:= ShiftDir(NewDir);
+       (* DD
+       NewHead.X:= aWorm.Head.X + Addition[NewDir, aX];
+       NewHead.Y:= aWorm.Head.Y + Addition[NewDir, aY];
+       *)
+       MovePoint(l_W.Head.Position, NewDir, NewHead);
+     until LetsGo or (LegalDirs = []);
+   end;
+   if LegalDirs = [] then
+      NewDir:= dtStop;
+  {until not aWorm.IsNeck(NewHead);}
+  Result:= NewDir;
+end;
+
+{
+******************************** TImpudentMind *********************************
+}
+function TImpudentMind.GetCaption: string;
+begin
+  Result:= 'Наглый';
+end;
+
+function TImpudentMind.GetEnglishCaption: string;
+begin
+  Result:= 'Impudent'
+end;
+
+function TImpudentMind.Thinking: TwwDirection;
+var
+  NewHead: array[1..40] of TPoint;
+  NewDir: TwwDirection;
+  Depth: Byte;
+  LegalDirs: TwwDirections;
+  l_W: TwwWorm;
+  function LetsGo(N:Byte):Boolean;
+  var
+    I,J: Integer;
+    Test: Boolean;
+    NDir : TwwDirection;
+  begin
+    if N > 5 then
+       Test:= Test;
+    Test:= False;
+    if N > Depth then
+    begin
+      LetsGo:= True;
+      Exit;
+    end;
+    for J:= 1 to N-1 do
+    begin
+      if Equal(NewHead[N],NewHead[J]) then
+      begin
+        LetsGo:= False;
+        Exit;
+      end;
+    end;
+    if IsFree(NewHead[N]) then
+    begin
+      NDir:= dtStop;
+      for I:= 1 to 4 do
+      begin
+        NDir:= ShiftDir(NDir);
+        (* DD
+        NewHead[N+1].X:= NewHead[N].X + Addition[NDir, aX];
+        NewHead[N+1].Y:= NewHead[N].Y + Addition[NDir, aY];
+        *)
+        MovePoint(NewHead[N+1], NDir, NewHead[N]);
+        if LetsGo(N+1) then
+        begin
+          LetsGo:= True;
+          Exit;
+        end;
+      end;
+    end
+    else Test:= False;
+    LetsGo:= Test;
+  end;
+
+begin
+  {  if aWorm.Size < 50 then aWorm.Favorite:= not aWorm.Favorite{ftVertical}
+ l_W:= Thing as TwwWorm;
+   //FillChar(NewHead, SizeOf(NewHead),0);
+   Depth:= Round(l_W.Length/5);
+   if Depth < 2 then Depth:= 2;
+   if Depth > 9 then Depth:= 9;
+   case l_W.Favorite of
+     ftVertical:
+     begin
+       if l_W.Target.Head.Position.Y <> l_W.Head.Position.Y then
+       begin
+         if l_W.Target.Head.Position.Y - l_W.Head.Position.Y > 0 then
+           NewDir:= dtDown
+         else
+           NewDir:= dtUp;
+       end
+       else
+       begin
+         if l_W.Target.Head.Position.X - l_W.Head.Position.X > 0 then
+           NewDir:= dtRight
+         else
+           NewDir:= dtLeft;
+       end;
+     end;
+     ftHorizontal:
+     begin
+       if l_W.Target.Head.Position.X <> l_W.Head.Position.X then
+       begin
+         if l_W.Target.Head.Position.X-l_W.Head.Position.X > 0 then
+           NewDir:= dtRight
+         else
+           NewDir:= dtLeft;
+       end
+       else
+       begin
+         if l_W.Target.Head.Position.Y-l_W.Head.Position.Y > 0 then
+           NewDir:= dtDown
+         else
+           NewDir:= dtUp;
+       end;
+     end;
+   end;
+    (*
+    NewHead[1].X:= l_W.Head.Position.X + Addition[NewDir, aX];
+    NewHead[1].Y:= l_W.Head.Position.Y + Addition[NewDir, aY];
+    *)
+    MovePoint(l_W.Head.Position, NewDir, NewHead[1]);
+    if l_W.IsMe(NewHead[1]) then
+      if l_W.ToTail(NewHead[1]) <> dtstop then
+        NewDir:= l_W.ToTail(NewHead[1]);
+    (*
+    NewHead[1].X:= l_W.Head.Position.X + Addition[NewDir, aX];
+    NewHead[1].Y:= l_W.Head.Position.Y + Addition[NewDir, aY];
+    *)
+   MovePoint(l_W.Head.Position, NewDir, NewHead[1]);
+   if not LetsGo(1) then
+   begin
+     LegalDirs:= [dtLeft, dtUp, dtRight, dtDown];
+     repeat
+       Exclude(LegalDirs, NewDir);
+       NewDir:= ShiftDir(NewDir);
+       (* DD
+       NewHead[1].X:= l_W.Head.Position.X + Addition[NewDir, aX];
+       NewHead[1].Y:= l_W.Head.Position.Y + Addition[NewDir, aY];
+       *)
+       MovePoint(l_W.Head.Position, NewDir, NewHead[1]);
+     until LetsGo(1) or (LegalDirs = []);
+   end;
+   if LegalDirs = [] then
+      NewDir:= dtStop;
+  {until not l_W.IsNeck(NewHead);}
+  Result:= NewDir;
+end;
+
+{
+********************************* TCowardMind **********************************
+}
+function TCowardMind.GetCaption: string;
+begin
+  Result:= 'Трус'
+end;
+
+function TCowardMind.GetEnglishCaption: string;
+begin
+  Result:= 'Coward'
+end;
+
+function TCowardMind.Thinking: TwwDirection;
+var
+  NewHead, NewHead2: TPoint;
+  NewDir, NewDirX, NewDirY: TwwDirection;
+  LegalDirs: TwwDirections;
+  l_W: TwwWorm;
+
+  function LetsGo:Boolean;
+  var
+    I,J: Integer;
+    Test: Boolean;
+    NDir, NGoDir: TwwDirection;
+    NHead, NGoHead: TPoint;
+    Tst: Byte;
+  begin
+   
+    Test:= False;
+    if IsFree(NewHead) then
+    begin
+      NGoDir:= NewDir;
+      NGoHead:= l_W.Head.Position;
+      repeat
+        NDir:= InvertDir(NGoDir);
+        MovePoint(NGoHead, NGoDir, NGoHead);
+        Tst:= 0;
+        for I:= 1 to 3 do
+        begin
+          NDir:= ShiftDir(NDir);
+          MovePoint(NGoHead, NDir, NHead);
+          if IsFree(NHead) then
+          begin
+            Tst:= Tst + 1;
+            NGoDir:= NDir;
+          end;
+        end;
+      until (Tst<1) or (Tst>1);
+      if Tst = 0 then
+        Test:= False
+      else Test:= True;
+    end
+    else Test:= False;
+    LetsGo:= Test;
+  end;
+
+begin
+ l_W:= Thing as TwwWorm;
+   if Abs(l_W.Target.Head.Position.X - l_W.Head.Position.X) >=
+       Abs(l_W.Target.Head.Position.Y - l_W.Head.Position.Y) then
+     l_W.Favorite:= ftVertical
+   else
+     l_W.Favorite:= ftHorizontal;
+
+   if l_W.Target.Head.Position.Y = l_W.Head.Position.Y then
+     l_W. Favorite:= ftHorizontal;
+
+   if l_W.Target.Head.Position.Y - l_W.Head.Position.Y > 0 then
+     NewDirY:= dtDown
+   else
+     NewDirY:= dtUp;
+  
+   if l_W.Target.Head.Position.X = l_W.Head.Position.X then
+     l_W.Favorite:= ftVertical;
+  
+   if l_W.Target.Head.Position.X-l_W.Head.Position.X > 0 then
+     NewDirX:= dtRight
+   else
+     NewDirX:= dtLeft;
+  
+   if l_W.Favorite = ftHorizontal then
+     NewDir:= NewDirX
+   else
+     NewDir:= NewDirY;
+   MovePoint(l_W.Head.Position, NewDir, NewHead);
+   if l_W.IsMe(NewHead) then
+   begin
+     if l_W.ToHead(NewHead) <> dtStop then
+  {      NewDir:= l_W.ToHead(NewHead);}
+       NewDir:= l_W.ToTail(NewHead);
+   end;
+   MovePoint(l_W.Head.Position, NewDir, NewHead);
+   if not LetsGo then
+   begin
+     if l_W.Favorite = ftHorizontal then
+       NewDir:= NewDirY
+     else
+       NewDir:= NewDirX;
+  
+     MovePoint(l_W.Head.Position, NewDir, NewHead);
+  
+     if not LetsGo then
+     begin
+       if l_W.Favorite = ftHorizontal then
+         NewDir:= InvertDir(NewDirX)
+       else
+         NewDir:= InvertDir(NewDirY);
+       MovePoint(l_W.Head.Position, NewDir, NewHead);
+       if not LetsGo then
+       begin
+         if l_W.Favorite = ftHorizontal then
+           NewDir:= InvertDir(NewDirY)
+         else
+           NewDir:= InvertDir(NewDirX);
+          MovePoint(l_W.Head.Position, NewDir, NewHead);
+          if not LetsGo then
+          begin
+            NewDir:= dtStop;
+          end;
+       end;
+     end;
+   end;
+   Result:= NewDir;
+end;
+
+end.

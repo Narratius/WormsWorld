@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<nodeSet>
+  <view uin="n027e320n">
+    <property name="$name" value="PoligonForm" />
+    <property name="$metaclass" value="Package Diagram" />
+    <reference referencedUin="source:WormsPoligon:PoligonForm.TForm1">
+      <property name="$shortcutReference" value="true" />
+      <reference referencedUin="source:WormsPoligon:Borland.Vcl.StdCtrls.TGroupBox" />
+      <reference referencedUin="source:WormsPoligon:Borland.Vcl.StdCtrls.TLabel" />
+      <reference referencedUin="source:WormsPoligon:Borland.Vcl.StdCtrls.TComboBox" />
+      <reference referencedUin="source:WormsPoligon:Borland.Vcl.StdCtrls.TButton" />
+      <reference referencedUin="source:WormsPoligon:Borland.Vcl.ComCtrls.TListView" />
+      <reference referencedUin="source:WormsPoligon:Borland.Vcl.XPMan.TXPManifest" />
+      <reference referencedUin="source:WormsPoligon:Borland.Vcl.Grids.TDrawGrid" />
+      <reference referencedUin="source:WormsPoligon:Borland.Vcl.StdCtrls.TCheckBox" />
+      <reference referencedUin="source:WormsPoligon:PoligonForm.TForm1.Button1Click" />
+      <reference referencedUin="source:WormsPoligon:PoligonForm.TForm1.Button2Click" />
+      <reference referencedUin="source:WormsPoligon:PoligonForm.TForm1.Button3Click" />
+      <reference referencedUin="source:WormsPoligon:PoligonForm.TForm1.FormCreate" />
+      <reference referencedUin="source:WormsPoligon:PoligonForm.TForm1.CheckBox1Click" />
+      <reference referencedUin="source:WormsPoligon:WormsWorld.TWormsField" />
+      <reference referencedUin="source:WormsPoligon:PoligonForm.TForm1.FCAncel" />
+      <reference referencedUin="source:WormsPoligon:PoligonForm.TForm1.FMapVisible" />
+      <reference referencedUin="source:WormsPoligon:PoligonForm.TForm1.FShowIdeas" />
+      <reference referencedUin="source:WormsPoligon:PoligonForm.TForm1.NewIdea" />
+      <reference referencedUin="source:WormsPoligon:PoligonForm.TForm1.MapGridDrawCell" />
+    </reference>
+  </view>
+</nodeSet>

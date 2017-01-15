@@ -1,0 +1,230 @@
+unit wwUtils;
+
+interface
+Uses
+ Types,
+ wwTypes;
+
+function Equal(A, B: TPoint): Boolean;
+{ ѕровер€ет, совпадают ли координаты переданных точек }
+
+procedure IncPoint(var APoint: TPoint; ADir: TDirection);
+{ ѕеремещает переданную точку в указанном направлении }
+
+procedure MovePoint(FromPoint: TPoint; Dir: TDirection; var ToPoint: TPoint); overload;
+{ ѕеремещает переданную точку в указанном направлении }
+
+function MovePoint(FromPoint: TPoint; Dir: TDirection): TPoint; overload
+{ ѕеремещает переданную точку в указанном направлении }
+
+function ShiftDir(ADir: TDirection): TDirection;
+{ —двигает направление вправо }
+
+function ShiftDirLeft(ADir: TDirection): TDirection;
+{ —двигает направление влево }
+
+function InvertDir(ADir: TDirection): TDirection;
+{ ¬озвращает направление противоположное переданному }
+
+function CalcDir(FromPoint, ToPoint: TPoint; FavoriteDir: TwwFavoriteType):
+    TDirection;
+{ ¬ычисл€ет направление от точки FromPoint на точку ToPoint с учетом приоритетного направлени€ }
+
+function BodySegment(FromPoint, ToPoint, ZeroPoint: TPoint): TCurve;
+
+
+function CalcDistance(A, B: TPoint): Integer;
+{ ¬ычисл€ет рассто€ние между двум€ точками }
+
+function IsTurn(A, B: TPoint): Boolean;
+{ Ќаход€тс€ ли переданные точки на повороте }
+
+function InvertFavorite(aFavorite: TwwFavoriteType): TwwFavoriteType;
+{ »нвертирует приоритетное направление }
+
+implementation
+
+const
+(*
+  Addition : array [TDirection, ..aY] of Integer = (
+	           (0, 0), (0, 0), (-1, 0), (0, -1), (1, 0), (0, 1));
+*)
+  AddPoint : array[TDirection] of TPoint = (
+             (X:0; Y:0), // dtNone,
+             (X:0;Y:0),  // dtStop,
+             (X:-1; Y:0),// dtLeft,
+             (X:0; Y:-1),// dtUp,
+             (X:1; Y:0), // dtRight,
+             (X:0; Y:1));// dtDown
+
+function BodySegment(FromPoint, ToPoint, ZeroPoint: TPoint): TCurve;
+var
+ P1, P2: TPoint;
+begin
+ if Equal(FromPoint, ToPoint) then
+  Result:= ctNone
+ else
+ if FromPoint.X = ToPoint.X then
+ begin
+  if FromPoint.Y > ToPoint.Y then
+   Result:= ctUp
+  else
+   Result:= ctDown
+ end
+ else
+ if FromPoint.Y = ToPoint.Y then
+ begin
+  if FromPoint.X > ToPoint.X then
+   Result:= ctLeft
+  else
+   Result:= ctRight
+ end
+ else
+ if (FromPoint.X < ToPoint.X) and (FromPoint.Y > ToPoint.Y) and
+    (ZeroPoint.X = ToPoint.X) and (ZeroPoint.Y = FromPoint.Y) then
+  Result:= ctLeftUp
+ else
+ if (FromPoint.X > ToPoint.X) and (FromPoint.Y < ToPoint.Y) and
+    (ZeroPoint.X = FromPoint.X) and (ZeroPoint.Y = ToPoint.Y) then
+  Result:= ctLeftUp
+ else
+ if (FromPoint.X < ToPoint.X) and (FromPoint.Y < ToPoint.Y) and
+    (ZeroPoint.X = FromPoint.X) and (ZeroPoint.Y = ToPoint.Y) then
+  Result:= ctRightUp
+ else
+ if (FromPoint.X > ToPoint.X) and (FromPoint.Y > ToPoint.Y) and
+    (ZeroPoint.X = ToPoint.X) and (ZeroPoint.Y = FromPoint.Y) then
+  Result:= ctRightUp
+ else
+ if (FromPoint.X < ToPoint.X) and (FromPoint.Y > ToPoint.Y) and
+    (ZeroPoint.X = FromPoint.X) and (ZeroPoint.Y = ToPoint.Y) then
+  Result:= ctRightDown
+ else
+ if (FromPoint.X > ToPoint.X) and (FromPoint.Y < ToPoint.Y) and
+    (ZeroPoint.X = ToPoint.X) and (ZeroPoint.Y = FromPoint.Y) then
+  Result:= ctRightDown
+ else
+  REsult:= ctLeftDown
+end;
+
+
+
+function Equal(A, B: TPoint): Boolean;
+begin
+  Equal:= (A.X = B.X) and (A.Y = B.Y);
+end;
+
+
+
+function ShiftDir(ADir: TDirection): TDirection;
+begin
+  case ADir of
+    dtUp: ShiftDir:= dtRight;
+    dtRight: ShiftDir:= dtDown;
+    dtDown: ShiftDir:= dtLeft;
+    dtLeft: ShiftDir:= dtUp;
+  else
+    ShiftDir:= ADir;
+  end;
+end;
+
+function ShiftDirLeft(ADir: TDirection): TDirection;
+begin
+  case ADir of
+    dtUp: ShiftDirLeft:= dtLeft;
+    dtRight: ShiftDirLeft:= dtUp;
+    dtDown: ShiftDirLeft:= dtRight;
+    dtLeft: ShiftDirLeft:= dtDown;
+  else
+    ShiftDirLeft:= ADir;
+  end;
+end;
+
+function InvertDir(ADir: TDirection): TDirection;
+begin
+  case ADir of
+    dtUp   : InvertDir:= dtDown;
+    dtRight: InvertDir:= dtLeft;
+    dtDown : InvertDir:= dtUp;
+    dtLeft : InvertDir:= dtRight;
+  else
+    InvertDir:= ADir;
+  end;
+end;
+
+function CalcDir(FromPoint, ToPoint: TPoint; FavoriteDir: TwwFavoriteType): 
+    TDirection;
+var
+  Delta: TPoint;
+  i: Integer;
+begin
+  Delta.X:= FromPoint.X - ToPoint.X;
+  Delta.Y:= FromPoint.Y - ToPoint.Y;
+
+  if (Delta.X <> 0) and (Delta.Y <> 0) then
+  begin
+   if FavoriteDir = ftVertical then
+    Delta.X:= 0
+   else
+    Delta.Y:= 0;
+  end; // (Delta.X <> 0) and (Delta.Y <> 0)
+
+  if Delta.X > 0 then
+    Delta.X:= -1
+  else
+  if Delta.X < 0 then
+    Delta.X:= 1;
+
+  if Delta.Y > 0 then
+    Delta.Y:= -1
+  else
+  if Delta.Y < 0 then
+    Delta.Y:= 1;
+  Result:= dtStop;
+  for i:= Ord(dtStop) to Ord(High(TDirection)) do
+   if Equal(AddPoint[TDirection(i)], Delta) then
+   begin
+    Result:= TDirection(i);
+    break;
+   end;
+end;
+
+
+procedure IncPoint(var APoint: TPoint; ADir: TDirection);
+begin
+  APoint.X:= APoint.X + AddPoint[ADir].X;
+  APoint.Y:= APoint.Y + AddPoint[ADir].Y;
+end;
+
+
+procedure MovePoint(FromPoint: TPoint; Dir: TDirection; var ToPoint: TPoint);
+begin
+  ToPoint:= FromPoint;
+  IncPoint(ToPoint, Dir);
+end;
+
+function MovePoint(FromPoint: TPoint; Dir: TDirection): TPoint;
+begin
+ Result:= FromPoint;
+ IncPoint(Result, Dir);
+end;
+
+function CalcDistance(A, B: TPoint): Integer;
+begin
+ Result:= Abs(A.X - B.X) + Abs(A.Y - B.Y);
+end;
+
+function IsTurn(A, B: TPoint): Boolean;
+begin
+ Result:= Abs(A.X - B.X) + Abs(A.Y - B.Y) > 1;
+end;
+
+function InvertFavorite(aFavorite: TwwFavoriteType): TwwFavoriteType;
+begin
+ if aFavorite = ftVertical then
+  Result:= ftHorizontal
+ else
+  Result:= ftVertical;
+end;
+
+end.
