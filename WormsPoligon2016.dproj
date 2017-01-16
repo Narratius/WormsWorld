@@ -98,7 +98,7 @@
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
         <DCCReference Include="PoligonForm.pas">
-            <Form>Form1</Form>
+            <Form>WormPoligonForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">
