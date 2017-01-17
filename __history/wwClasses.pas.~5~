@@ -528,9 +528,7 @@ begin
   f_Ideas.Ressurect;
   Things[i].Update;
   if Things[i].IsDead then
-   Ressurect(Things[i])
-  else
-   AddThingToMap(l_T);
+   Ressurect(Things[i]);
  end;
 end;
 
@@ -557,11 +555,8 @@ end;
 
 function TwwWorld.IsLegal(aPoint: TPoint): Boolean;
 begin
- Result:= f_Bounds.Contains(aPoint);
- {
  Result := InRange(aPoint.X, f_Bounds.Left, f_Bounds.Right) and
            InRange(aPoint.Y, f_Bounds.Top, f_Bounds.Bottom);
- }
 end;
 
 procedure TwwWorld.AddThingToMap(aThing: TwwThing);

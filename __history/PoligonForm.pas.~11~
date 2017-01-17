@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ComCtrls, StdCtrls, WormsWorld, Grids, Vcl.ExtCtrls,
+  Dialogs, ComCtrls, StdCtrls, WormsWorld, XPMan, Grids, Vcl.ExtCtrls,
   System.ImageList, Vcl.ImgList;
 
 type
@@ -34,7 +34,6 @@ type
       Rect: TRect; State: TGridDrawState);
     procedure CheckBox1Click(Sender: TObject);
     procedure WorldPaintBoxPaint(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
    FWorld: TWormsField;
@@ -183,11 +182,6 @@ begin
 
 end;
 
-procedure TWormPoligonForm.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-  StopButton.Click;
-end;
-
 procedure TWormPoligonForm.FormCreate(Sender: TObject);
 begin
  DoubleBuffered:= True;
@@ -260,12 +254,26 @@ begin
       l_Draw:= True;
      if l_Draw then
      begin
+      (*
+      l_Rect.Left:= l_T.Points[k].Position.X*16;
+      l_Rect.Top:= l_T.Points[k].Position.Y*16;
+      if l_T.Entity = weLive then
+        WormsImageList.Draw(WorldPaintBox.Canvas, l_Rect.Left, l_Rect.Top, 1+l_T.Variety*14+ l_T.Points[k].Value)
+      else
+        WormsImageList.Draw(WorldPaintBox.Canvas, l_Rect.Left, l_Rect.Top, l_T.Variety)
+      *)
       l_Rect.Left:= l_T.Points[k].Position.X*8;
       l_Rect.Top:= l_T.Points[k].Position.Y*8;
       if l_T.Entity = weLive then
         Worms8ImageList.Draw(WorldPaintBox.Canvas, l_Rect.Left, l_Rect.Top, 1+l_T.Variety*14+ l_T.Points[k].Value)
       else
         Worms8ImageList.Draw(WorldPaintBox.Canvas, l_Rect.Left, l_Rect.Top, l_T.Variety)
+      (*
+      if l_T.Entity = weLive then
+        Worms8ImageList.Draw(WorldPaintBox.Canvas, l_Rect.Left, l_Rect.Top, l_T.Points[k].Value)
+      else
+        Worms8ImageList.Draw(WorldPaintBox.Canvas, l_Rect.Left, l_Rect.Top, 0)
+      *)
      end;
     end;
    end;
@@ -280,6 +288,35 @@ begin
    end;
    *)
   end;
+
+
+ (*
+  for I := 0 to Pred(FWorld.Size.Width) do
+    for j := 0 to Pred(FWOrld.Size.Height) do
+    begin
+      l_Rect.Left:= i*16;
+      l_Rect.Top:= j*16;
+      l_Rect.Width:= 16;
+      l_Rect.Height:= 16;
+      WorldPaintBox.Canvas.Brush.Color:= clGray;
+      l_T:= FWorld.ThingAt(Point(i, j));
+      if l_T <> nil then
+      begin
+       if l_T.Entity = weLive then
+       begin
+       // WorldPaintBox.Canvas.Brush.Color:= WormColor[l_T.Variety]
+         WormsImageList.Draw(WorldPaintBox.Canvas, l_Rect.Left, l_Rect.Top, );
+       end
+       else
+       begin
+        //WorldPaintBox.Canvas.Brush.Color:= TargetColor[l_T.Variety];
+        WormsImageList.Draw(WorldPaintBox.Canvas, l_Rect.Left, l_Rect.Top, l_T.Variety);
+       end;
+      end
+      else // l_T <> nil
+       WorldPaintBox.Canvas.FillRect(l_Rect);
+    end; // for j
+  *)
  end; // FCancel
 end;
 
