@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ComCtrls, StdCtrls, WormsWorld, Grids, Vcl.ExtCtrls,
-  System.ImageList, Vcl.ImgList;
+  System.ImageList, Vcl.ImgList, wwFullScreenForm;
 
 type
   TWormPoligonForm = class(TForm)
@@ -23,8 +23,6 @@ type
     MapButton: TButton;
     MapGrid: TDrawGrid;
     CheckBox1: TCheckBox;
-    WormsImageList: TImageList;
-    WorldPaintBox: TPaintBox;
     Worms8ImageList: TImageList;
     procedure StartButtonClick(Sender: TObject);
     procedure StopButtonClick(Sender: TObject);
@@ -33,14 +31,14 @@ type
     procedure MapGridDrawCell(Sender: TObject; ACol, ARow: Integer;
       Rect: TRect; State: TGridDrawState);
     procedure CheckBox1Click(Sender: TObject);
-    procedure WorldPaintBoxPaint(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
    FWorld: TWormsField;
    FCAncel: Boolean;
    FMapVisible: Boolean;
-    FShowIdeas: Boolean;
+   FShowIdeas: Boolean;
+   f_FSForm: TFSForm;
    procedure NewIdea(Sender: TObject);
   public
     { Public declarations }
@@ -124,23 +122,39 @@ begin
   FWorld.InstantRessurectTargets:= True;
   FWorld.InstantRessurectWorms:= True;
   FWorld.OnNewIdea:= NewIdea;
-  FCancel:= False; FShowIdeas:= False;
-  repeat
-   FWorld.Update;
-   for i:= 0 to Pred(FWorld.WormsCount) do
-   begin
-    itm:= StatisticView.Items[i];
-    itm.Caption:= FWorld.Worms[i].Mind.Caption;
-    itm.SubItems.Strings[0]:= IntToStr(FWorld.Worms[i].Length);
-    itm.SubItems.Strings[1]:= IntToStr(FWorld.Worms[i].Mind.MaxThingLength);
-    itm.SubItems.Strings[2]:= IntToStr(FWorld.Worms[i].Mind.Weight)+'%';
-    Itm.SubItems.Strings[3]:= IntToStr(FWorld.Worms[i].Age);
-   end; // for i
-   MapGrid.Invalidate;
-   WorldPaintBox.Invalidate;
-   Application.ProcessMessages;
-   Sleep(25);
-  until FCancel;
+
+  f_FSForm:= TFSForm.Create(Application);
+  try
+    f_FSForm.World:= fWorld;
+
+    FCancel:= False; FShowIdeas:= False;
+    repeat
+     FWorld.Update;
+     for i:= 0 to Pred(FWorld.WormsCount) do
+     begin
+      itm:= StatisticView.Items[i];
+      itm.Caption:= FWorld.Worms[i].Mind.Caption;
+      itm.SubItems.Strings[0]:= IntToStr(FWorld.Worms[i].Length);
+      itm.SubItems.Strings[1]:= IntToStr(FWorld.Worms[i].Mind.MaxThingLength);
+      itm.SubItems.Strings[2]:= IntToStr(FWorld.Worms[i].Mind.Weight)+'%';
+      Itm.SubItems.Strings[3]:= IntToStr(FWorld.Worms[i].Age);
+     end; // for i
+     if FMapVisible then
+     begin
+    //  MapGrid.Invalidate;
+    //  WorldPaintBox.Invalidate;
+      if f_FSForm.Visible then
+       f_FSForm.Invalidate
+      else
+       FMapVisible:= False;
+     end;
+     Application.ProcessMessages;
+     Sleep(25);
+    until FCancel;
+  finally
+    FreeAndNil(f_FSForm);
+  end;
+
   FWorld.MindCenter.Resort;
   StatisticView.Items.Clear;
   for i:= Pred(FWorld.MindCenter.Count) downto 0 do
@@ -168,8 +182,17 @@ begin
 end;
 
 procedure TWormPoligonForm.MapButtonClick(Sender: TObject);
+var
+ l_Form: TFSForm;
 begin
  FMapVisible:= not FMapVisible;
+
+ if FMapVisible then
+ begin
+   f_FSForm.Show;
+ end;
+
+ (*
  if FMapVisible then
  begin
   ClientHeight:= MapGrid.Top + MapGrid.Height + 10;
@@ -180,7 +203,7 @@ begin
   ClientHeight:= GroupBox2.Top+GroupBox2.Height+10;
   //Width:=550;
  end;
-
+ *)
 end;
 
 procedure TWormPoligonForm.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -228,59 +251,6 @@ begin
  if FMapVisible and FShowIdeas then
   MapGrid.Refresh;
  Application.ProcessMessages;
-end;
-
-procedure TWormPoligonForm.WorldPaintBoxPaint(Sender: TObject);
-var
- l_T: TwwThing;
- i, j: Integer;
- l_Rect: TRect;
- k, l_What: Integer;
- Y: Single;
- l_Draw: Boolean;
-begin
- if not FCancel and FMapVisible then
- begin
-  l_Rect:= WorldPaintBox.ClientRect;
-  WorldPaintBox.Canvas.Brush.Color:= clGreen;
-  WorldPaintBox.Canvas.FillRect(l_Rect);
-
-  j:= 0;
-  for i:= 0 to Pred(FWorld.Count) do
-  begin
-   l_T:= FWorld.Things[i];
-
-   if not l_T.IsDead then
-   begin
-    for k:= 0 to Pred(l_T.Length) do
-    begin
-     if (k > 0) then
-      l_Draw:= not wwUtils.Equal(l_T.Points[k].Position, l_T.Points[Pred(k)].Position)
-     else
-      l_Draw:= True;
-     if l_Draw then
-     begin
-      l_Rect.Left:= l_T.Points[k].Position.X*8;
-      l_Rect.Top:= l_T.Points[k].Position.Y*8;
-      if l_T.Entity = weLive then
-        Worms8ImageList.Draw(WorldPaintBox.Canvas, l_Rect.Left, l_Rect.Top, 1+l_T.Variety*14+ l_T.Points[k].Value)
-      else
-        Worms8ImageList.Draw(WorldPaintBox.Canvas, l_Rect.Left, l_Rect.Top, l_T.Variety)
-     end;
-    end;
-   end;
-   (*
-   if FWormsField.Things[i] is TwwWorm then
-   begin
-    Y:= Game.Height-16;
-    with FWormsField.Things[i] as TwwWorm do
-     GV_Font_Print(Font,  i*(Game.Width div FWormsField.WormsCount), Y, WormColors[i],
-       '%s: %d (Max:%d) for %d', [Caption, Length, Mind.MaxThingLength, Age]);
-    Inc(j);
-   end;
-   *)
-  end;
- end; // FCancel
 end;
 
 procedure TWormPoligonForm.CheckBox1Click(Sender: TObject);

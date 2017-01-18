@@ -31,14 +31,14 @@ Type
   FAge: Integer;
   FAbsoluteIndex: Integer;
  private
-    function GetHead: TwwPoint;
-    function GetIsLive: Boolean;
-    function GetLength: Integer;
-    function GetPoint(Index: Integer): TwwPoint;
-    function GetTail: TwwPoint;
-    procedure SetIsDead(const Value: Boolean);
-    procedure SetIsLive(const Value: Boolean);
-    procedure SetLength(const Value: Integer);
+  function GetHead: TwwPoint;
+  function GetIsLive: Boolean;
+  function GetLength: Integer;
+  function GetPoint(Index: Integer): TwwPoint;
+  function GetTail: TwwPoint;
+  procedure SetIsDead(const Value: Boolean);
+  procedure SetIsLive(const Value: Boolean);
+  procedure SetLength(const Value: Integer);
  protected
   procedure CorrectSegments; virtual;
   procedure Move;
@@ -444,18 +444,20 @@ begin
  Result:= False;
  if IsLegal(aPoint) then
  begin
+  {$IFDEF UseArray}
   i:= FMap[aPoint.X, aPoint.Y];
   if i > -1 then
   begin
-   
+
    l_T:= Things[i];
    if l_T.Entity in aWhat then
    begin
     aThing:= l_T;
     Result:= True;
-   end; 
+   end;
   end; // i > -1
-  (*
+  {$ELSE}
+
   for i:= 0 to Pred(Count) do
    if Things[i].IsMe(aPoint) and (Things[i].Entity in aWhat) then
    begin
@@ -463,7 +465,7 @@ begin
     aThing:= Things[i];
     break;
    end;
-  *)
+  {$ENDIF}
   (*
   if not FNotIdea then
   begin
@@ -558,10 +560,6 @@ end;
 function TwwWorld.IsLegal(aPoint: TPoint): Boolean;
 begin
  Result:= f_Bounds.Contains(aPoint);
- {
- Result := InRange(aPoint.X, f_Bounds.Left, f_Bounds.Right) and
-           InRange(aPoint.Y, f_Bounds.Top, f_Bounds.Bottom);
- }
 end;
 
 procedure TwwWorld.AddThingToMap(aThing: TwwThing);
