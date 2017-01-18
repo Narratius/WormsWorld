@@ -1,20 +1,21 @@
 ﻿[Closed Files]
-File_0=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\User Interface\LowLevel3D\LowLevel3DFrm.pas',0,1,154,1,1,0,0,,
-File_1=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\Physics\FMXSimplePhysics\uSimulationFmxCtrls.pas',0,1,1,14,7,0,0,,
-File_2=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\Physics\FMXSimplePhysics\uFormFmxPhysics.pas',0,1,1,1,1,0,0,,
-File_3=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\Physics\Box2DHello\uFormBox2DHelloWorld.pas',0,1,1,14,40,0,0,,
-File_4=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\User Interface\ControlsDesktop\ctrlsdemofrm.pas',0,1,1,1,1,0,0,,
-File_5=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\Parallel Library\FMX\LifeUnitFmx.pas',0,1,128,95,157,0,0,,
-File_6=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\Parallel Library\Shared_Code\LifeEngine.pas',0,1,52,5,371,0,0,,
-File_7=TSourceModule,'D:\Clouds\GitHub\quide\gvsdk\sources\GVDLL.pas',0,1,3406,11,3426,0,0,,
-File_8=TSourceModule,'D:\Clouds\GitHub\ww\TFGame.pas',0,1,1,6,6,0,0,,
-File_9=TSourceModule,'D:\Clouds\GitHub\ww\wwGVAdapter.PAS',0,1,5,28,7,0,0,,
+File_0=TSourceModule,'c:\program files (x86)\embarcadero\studio\18.0\SOURCE\VCL\Vcl.Graphics.pas',0,1,44,62,52,0,0,,
+File_1=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\User Interface\LowLevel3D\LowLevel3DFrm.pas',0,1,154,1,1,0,0,,
+File_2=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\Physics\FMXSimplePhysics\uSimulationFmxCtrls.pas',0,1,1,14,7,0,0,,
+File_3=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\Physics\FMXSimplePhysics\uFormFmxPhysics.pas',0,1,1,1,1,0,0,,
+File_4=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\Physics\Box2DHello\uFormBox2DHelloWorld.pas',0,1,1,14,40,0,0,,
+File_5=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\User Interface\ControlsDesktop\ctrlsdemofrm.pas',0,1,1,1,1,0,0,,
+File_6=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\Parallel Library\FMX\LifeUnitFmx.pas',0,1,128,95,157,0,0,,
+File_7=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\Parallel Library\Shared_Code\LifeEngine.pas',0,1,52,5,371,0,0,,
+File_8=TSourceModule,'D:\Clouds\GitHub\quide\gvsdk\sources\GVDLL.pas',0,1,3406,11,3426,0,0,,
+File_9=TSourceModule,'D:\Clouds\GitHub\ww\TFGame.pas',0,1,1,6,6,0,0,,
+File_10=TSourceModule,'D:\Clouds\GitHub\ww\wwGVAdapter.PAS',0,1,5,28,7,0,0,,
 
 [Modules]
-Module0=D:\Clouds\GitHub\WormsWorld\PoligonForm.pas
-Module1=D:\Clouds\GitHub\WormsWorld\wwFullScreenForm.pas
-Module2=c:\program files (x86)\embarcadero\studio\18.0\SOURCE\VCL\Vcl.Graphics.pas
-Module3=D:\Clouds\GitHub\WormsWorld\wwWorms.pas
+Module0=D:\Clouds\GitHub\WormsWorld\wwWorms.pas
+Module1=D:\Clouds\GitHub\WormsWorld\PoligonForm.pas
+Module2=D:\Clouds\GitHub\WormsWorld\wwFullScreenForm.pas
+Module3=default.htm
 Module4=D:\Clouds\GitHub\WormsWorld\wwClasses.pas
 Module5=D:\Clouds\GitHub\WormsWorld\wwStarMind.pas
 Module6=D:\Clouds\GitHub\WormsWorld\WormsWorld.pas
@@ -22,9 +23,11 @@ Module7=D:\Clouds\GitHub\WormsWorld\wwMinds.pas
 Module8=c:\program files (x86)\embarcadero\studio\18.0\SOURCE\RTL\SYS\System.Types.pas
 Module9=D:\Clouds\GitHub\WormsWorld\wwSimpleMind.pas
 Module10=D:\Clouds\GitHub\WormsWorld\wwUtils.pas
-Module11=default.htm
-Count=12
+Count=11
 EditWindowCount=1
+
+[D:\Clouds\GitHub\WormsWorld\wwWorms.pas]
+ModuleType=TSourceModule
 
 [D:\Clouds\GitHub\WormsWorld\PoligonForm.pas]
 ModuleType=TSourceModule
@@ -32,11 +35,8 @@ ModuleType=TSourceModule
 [D:\Clouds\GitHub\WormsWorld\wwFullScreenForm.pas]
 ModuleType=TSourceModule
 
-[c:\program files (x86)\embarcadero\studio\18.0\SOURCE\VCL\Vcl.Graphics.pas]
-ModuleType=TSourceModule
-
-[D:\Clouds\GitHub\WormsWorld\wwWorms.pas]
-ModuleType=TSourceModule
+[default.htm]
+ModuleType=TURLModule
 
 [D:\Clouds\GitHub\WormsWorld\wwClasses.pas]
 ModuleType=TSourceModule
@@ -59,12 +59,9 @@ ModuleType=TSourceModule
 [D:\Clouds\GitHub\WormsWorld\wwUtils.pas]
 ModuleType=TSourceModule
 
-[default.htm]
-ModuleType=TURLModule
-
 [EditWindow0]
-ViewCount=12
-CurrentEditView=D:\Clouds\GitHub\WormsWorld\PoligonForm.pas
+ViewCount=11
+CurrentEditView=D:\Clouds\GitHub\WormsWorld\wwWorms.pas
 View0=0
 View1=1
 View2=2
@@ -76,7 +73,6 @@ View7=7
 View8=8
 View9=9
 View10=10
-View11=11
 PercentageSizes=1
 Create=1
 Visible=1
@@ -134,17 +130,6 @@ EditViewName=Borland.FormDesignerView
 
 [View3]
 CustomEditViewType=TEditView
-Module=c:\program files (x86)\embarcadero\studio\18.0\SOURCE\VCL\Vcl.Graphics.pas
-CursorX=1
-CursorY=80
-TopLine=59
-LeftCol=1
-Elisions=
-Bookmarks=
-EditViewName=c:\program files (x86)\embarcadero\studio\18.0\SOURCE\VCL\Vcl.Graphics.pas
-
-[View4]
-CustomEditViewType=TEditView
 Module=D:\Clouds\GitHub\WormsWorld\WormsWorld.pas
 CursorX=57
 CursorY=54
@@ -154,7 +139,7 @@ Elisions=
 Bookmarks=
 EditViewName=D:\Clouds\GitHub\WormsWorld\WormsWorld.pas
 
-[View5]
+[View4]
 CustomEditViewType=TEditView
 Module=D:\Clouds\GitHub\WormsWorld\wwStarMind.pas
 CursorX=80
@@ -165,7 +150,7 @@ Elisions=
 Bookmarks=
 EditViewName=D:\Clouds\GitHub\WormsWorld\wwStarMind.pas
 
-[View6]
+[View5]
 CustomEditViewType=TEditView
 Module=D:\Clouds\GitHub\WormsWorld\wwClasses.pas
 CursorX=12
@@ -176,7 +161,7 @@ Elisions=
 Bookmarks=
 EditViewName=D:\Clouds\GitHub\WormsWorld\wwClasses.pas
 
-[View7]
+[View6]
 CustomEditViewType=TEditView
 Module=c:\program files (x86)\embarcadero\studio\18.0\SOURCE\RTL\SYS\System.Types.pas
 CursorX=3
@@ -187,7 +172,7 @@ Elisions=
 Bookmarks=
 EditViewName=c:\program files (x86)\embarcadero\studio\18.0\SOURCE\RTL\SYS\System.Types.pas
 
-[View8]
+[View7]
 CustomEditViewType=TEditView
 Module=D:\Clouds\GitHub\WormsWorld\wwSimpleMind.pas
 CursorX=14
@@ -198,10 +183,10 @@ Elisions=
 Bookmarks=
 EditViewName=D:\Clouds\GitHub\WormsWorld\wwSimpleMind.pas
 
-[View9]
+[View8]
 CustomEditViewType=TEditView
 Module=D:\Clouds\GitHub\WormsWorld\wwWorms.pas
-CursorX=23
+CursorX=20
 CursorY=127
 TopLine=107
 LeftCol=1
@@ -209,7 +194,7 @@ Elisions=
 Bookmarks=
 EditViewName=D:\Clouds\GitHub\WormsWorld\wwWorms.pas
 
-[View10]
+[View9]
 CustomEditViewType=TEditView
 Module=D:\Clouds\GitHub\WormsWorld\wwMinds.pas
 CursorX=24
@@ -220,7 +205,7 @@ Elisions=
 Bookmarks=
 EditViewName=D:\Clouds\GitHub\WormsWorld\wwMinds.pas
 
-[View11]
+[View10]
 CustomEditViewType=TEditView
 Module=D:\Clouds\GitHub\WormsWorld\wwUtils.pas
 CursorX=81
@@ -416,8 +401,8 @@ SplitPos=111
 
 [PropInspDesignerSelection]
 ArrangeBy=Name
-SelectedItem=Action,CustomHint
-ExpandedItems=Anchors=0,BorderIcons=1,Constraints=0,Font=0,LiveBindings=0,"LiveBindings Designer=0",Margins=0,GlassFrame=0,HorzScrollBar=0,Padding=0,StyleElements=0,Touch=0,VertScrollBar=0
+SelectedItem=Caption,
+ExpandedItems=Anchors=0,BorderIcons=0,Constraints=0,Border=0,Fill=0,FormFactor=0,LiveBindings=0,"LiveBindings Designer=0",Margins=0
 
 [ClassBrowserTool]
 PercentageSizes=1

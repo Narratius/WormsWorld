@@ -11,18 +11,35 @@ File_8=TSourceModule,'D:\Clouds\GitHub\ww\TFGame.pas',0,1,1,6,6,0,0,,
 File_9=TSourceModule,'D:\Clouds\GitHub\ww\wwGVAdapter.PAS',0,1,5,28,7,0,0,,
 
 [Modules]
-Module0=D:\Clouds\GitHub\WormsWorld\wwStarMind.pas
-Module1=D:\Clouds\GitHub\WormsWorld\WormsWorld.pas
-Module2=D:\Clouds\GitHub\WormsWorld\wwMinds.pas
-Module3=D:\Clouds\GitHub\WormsWorld\wwClasses.pas
-Module4=c:\program files (x86)\embarcadero\studio\18.0\SOURCE\RTL\SYS\System.Types.pas
-Module5=D:\Clouds\GitHub\WormsWorld\wwSimpleMind.pas
-Module6=D:\Clouds\GitHub\WormsWorld\PoligonForm.pas
-Module7=D:\Clouds\GitHub\WormsWorld\wwUtils.pas
-Module8=D:\Clouds\GitHub\WormsWorld\wwWorms.pas
-Module9=default.htm
-Count=10
+Module0=D:\Clouds\GitHub\WormsWorld\PoligonForm.pas
+Module1=D:\Clouds\GitHub\WormsWorld\wwFullScreenForm.pas
+Module2=c:\program files (x86)\embarcadero\studio\18.0\SOURCE\VCL\Vcl.Graphics.pas
+Module3=D:\Clouds\GitHub\WormsWorld\wwWorms.pas
+Module4=D:\Clouds\GitHub\WormsWorld\wwClasses.pas
+Module5=D:\Clouds\GitHub\WormsWorld\wwStarMind.pas
+Module6=D:\Clouds\GitHub\WormsWorld\WormsWorld.pas
+Module7=D:\Clouds\GitHub\WormsWorld\wwMinds.pas
+Module8=c:\program files (x86)\embarcadero\studio\18.0\SOURCE\RTL\SYS\System.Types.pas
+Module9=D:\Clouds\GitHub\WormsWorld\wwSimpleMind.pas
+Module10=D:\Clouds\GitHub\WormsWorld\wwUtils.pas
+Module11=default.htm
+Count=12
 EditWindowCount=1
+
+[D:\Clouds\GitHub\WormsWorld\PoligonForm.pas]
+ModuleType=TSourceModule
+
+[D:\Clouds\GitHub\WormsWorld\wwFullScreenForm.pas]
+ModuleType=TSourceModule
+
+[c:\program files (x86)\embarcadero\studio\18.0\SOURCE\VCL\Vcl.Graphics.pas]
+ModuleType=TSourceModule
+
+[D:\Clouds\GitHub\WormsWorld\wwWorms.pas]
+ModuleType=TSourceModule
+
+[D:\Clouds\GitHub\WormsWorld\wwClasses.pas]
+ModuleType=TSourceModule
 
 [D:\Clouds\GitHub\WormsWorld\wwStarMind.pas]
 ModuleType=TSourceModule
@@ -33,30 +50,21 @@ ModuleType=TSourceModule
 [D:\Clouds\GitHub\WormsWorld\wwMinds.pas]
 ModuleType=TSourceModule
 
-[D:\Clouds\GitHub\WormsWorld\wwClasses.pas]
-ModuleType=TSourceModule
-
 [c:\program files (x86)\embarcadero\studio\18.0\SOURCE\RTL\SYS\System.Types.pas]
 ModuleType=TSourceModule
 
 [D:\Clouds\GitHub\WormsWorld\wwSimpleMind.pas]
 ModuleType=TSourceModule
 
-[D:\Clouds\GitHub\WormsWorld\PoligonForm.pas]
-ModuleType=TSourceModule
-
 [D:\Clouds\GitHub\WormsWorld\wwUtils.pas]
-ModuleType=TSourceModule
-
-[D:\Clouds\GitHub\WormsWorld\wwWorms.pas]
 ModuleType=TSourceModule
 
 [default.htm]
 ModuleType=TURLModule
 
 [EditWindow0]
-ViewCount=10
-CurrentEditView=D:\Clouds\GitHub\WormsWorld\wwStarMind.pas
+ViewCount=12
+CurrentEditView=D:\Clouds\GitHub\WormsWorld\PoligonForm.pas
 View0=0
 View1=1
 View2=2
@@ -67,6 +75,8 @@ View6=6
 View7=7
 View8=8
 View9=9
+View10=10
+View11=11
 PercentageSizes=1
 Create=1
 Visible=1
@@ -103,15 +113,37 @@ WelcomePageURL=bds:/default.htm
 [View1]
 CustomEditViewType=TEditView
 Module=D:\Clouds\GitHub\WormsWorld\PoligonForm.pas
-CursorX=81
-CursorY=150
-TopLine=1
+CursorX=27
+CursorY=149
+TopLine=121
 LeftCol=1
 Elisions=
 Bookmarks=
-EditViewName=D:\Clouds\GitHub\WormsWorld\PoligonForm.pas
+EditViewName=Borland.FormDesignerView
 
 [View2]
+CustomEditViewType=TEditView
+Module=D:\Clouds\GitHub\WormsWorld\wwFullScreenForm.pas
+CursorX=22
+CursorY=89
+TopLine=68
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=Borland.FormDesignerView
+
+[View3]
+CustomEditViewType=TEditView
+Module=c:\program files (x86)\embarcadero\studio\18.0\SOURCE\VCL\Vcl.Graphics.pas
+CursorX=1
+CursorY=80
+TopLine=59
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=c:\program files (x86)\embarcadero\studio\18.0\SOURCE\VCL\Vcl.Graphics.pas
+
+[View4]
 CustomEditViewType=TEditView
 Module=D:\Clouds\GitHub\WormsWorld\WormsWorld.pas
 CursorX=57
@@ -122,7 +154,7 @@ Elisions=
 Bookmarks=
 EditViewName=D:\Clouds\GitHub\WormsWorld\WormsWorld.pas
 
-[View3]
+[View5]
 CustomEditViewType=TEditView
 Module=D:\Clouds\GitHub\WormsWorld\wwStarMind.pas
 CursorX=80
@@ -133,18 +165,18 @@ Elisions=
 Bookmarks=
 EditViewName=D:\Clouds\GitHub\WormsWorld\wwStarMind.pas
 
-[View4]
+[View6]
 CustomEditViewType=TEditView
 Module=D:\Clouds\GitHub\WormsWorld\wwClasses.pas
-CursorX=8
-CursorY=447
-TopLine=440
+CursorX=12
+CursorY=62
+TopLine=14
 LeftCol=1
 Elisions=
 Bookmarks=
 EditViewName=D:\Clouds\GitHub\WormsWorld\wwClasses.pas
 
-[View5]
+[View7]
 CustomEditViewType=TEditView
 Module=c:\program files (x86)\embarcadero\studio\18.0\SOURCE\RTL\SYS\System.Types.pas
 CursorX=3
@@ -155,7 +187,7 @@ Elisions=
 Bookmarks=
 EditViewName=c:\program files (x86)\embarcadero\studio\18.0\SOURCE\RTL\SYS\System.Types.pas
 
-[View6]
+[View8]
 CustomEditViewType=TEditView
 Module=D:\Clouds\GitHub\WormsWorld\wwSimpleMind.pas
 CursorX=14
@@ -166,18 +198,18 @@ Elisions=
 Bookmarks=
 EditViewName=D:\Clouds\GitHub\WormsWorld\wwSimpleMind.pas
 
-[View7]
+[View9]
 CustomEditViewType=TEditView
 Module=D:\Clouds\GitHub\WormsWorld\wwWorms.pas
-CursorX=14
-CursorY=44
-TopLine=1
+CursorX=23
+CursorY=127
+TopLine=107
 LeftCol=1
 Elisions=
 Bookmarks=
 EditViewName=D:\Clouds\GitHub\WormsWorld\wwWorms.pas
 
-[View8]
+[View10]
 CustomEditViewType=TEditView
 Module=D:\Clouds\GitHub\WormsWorld\wwMinds.pas
 CursorX=24
@@ -188,7 +220,7 @@ Elisions=
 Bookmarks=
 EditViewName=D:\Clouds\GitHub\WormsWorld\wwMinds.pas
 
-[View9]
+[View11]
 CustomEditViewType=TEditView
 Module=D:\Clouds\GitHub\WormsWorld\wwUtils.pas
 CursorX=81
@@ -216,11 +248,11 @@ State=0
 Left=0
 Top=0
 Width=3823
-Height=1163
+Height=1183
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3823
-ClientHeight=1163
+ClientHeight=1183
 TBDockHeight=212
 LRDockWidth=13604
 Dockable=1
@@ -253,8 +285,8 @@ Create=1
 Visible=1
 Docked=0
 State=2
-Left=0
-Top=0
+Left=146
+Top=269
 Width=8932
 Height=8519
 MaxLeft=-5
@@ -384,8 +416,8 @@ SplitPos=111
 
 [PropInspDesignerSelection]
 ArrangeBy=Name
-SelectedItem=Anchors.akRight,
-ExpandedItems=Anchors=1,Constraints=0,Font=0,LiveBindings=0,"LiveBindings Designer=0",Margins=0
+SelectedItem=Action,
+ExpandedItems=Anchors=0,BorderIcons=0,Constraints=0
 
 [ClassBrowserTool]
 PercentageSizes=1
@@ -393,8 +425,8 @@ Create=1
 Visible=0
 Docked=1
 State=0
-Left=0
-Top=-101
+Left=-36
+Top=-137
 Width=1849
 Height=3144
 MaxLeft=-1
@@ -453,11 +485,11 @@ State=0
 Left=0
 Top=0
 Width=2000
-Height=6740
+Height=7154
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=2000
-ClientHeight=6740
+ClientHeight=7154
 TBDockHeight=5962
 LRDockWidth=2510
 Dockable=1
@@ -469,8 +501,8 @@ Create=1
 Visible=0
 Docked=1
 State=0
-Left=-1419
-Top=-14
+Left=-1351
+Top=-137
 Width=2844
 Height=6202
 MaxLeft=-1
@@ -488,8 +520,8 @@ Create=1
 Visible=0
 Docked=1
 State=0
-Left=-1536
-Top=268
+Left=-1351
+Top=-137
 Width=276
 Height=365
 MaxLeft=-1
@@ -513,11 +545,11 @@ State=0
 Left=0
 Top=0
 Width=3823
-Height=1163
+Height=1183
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3823
-ClientHeight=1163
+ClientHeight=1183
 TBDockHeight=413
 LRDockWidth=4953
 Dockable=1
@@ -532,11 +564,11 @@ State=0
 Left=0
 Top=0
 Width=3823
-Height=1163
+Height=1183
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3823
-ClientHeight=1163
+ClientHeight=1183
 TBDockHeight=212
 LRDockWidth=7406
 Dockable=1
@@ -555,11 +587,11 @@ State=0
 Left=0
 Top=0
 Width=3823
-Height=1163
+Height=1183
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3823
-ClientHeight=1163
+ClientHeight=1183
 TBDockHeight=1538
 LRDockWidth=3484
 Dockable=1
@@ -574,11 +606,11 @@ State=0
 Left=0
 Top=0
 Width=3823
-Height=1163
+Height=1183
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3823
-ClientHeight=1163
+ClientHeight=1183
 TBDockHeight=2067
 LRDockWidth=3484
 Dockable=1
@@ -612,11 +644,11 @@ State=0
 Left=0
 Top=0
 Width=2339
-Height=1000
+Height=1240
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=2339
-ClientHeight=1000
+ClientHeight=1240
 TBDockHeight=2317
 LRDockWidth=2823
 Dockable=1
@@ -677,11 +709,11 @@ State=0
 Left=0
 Top=0
 Width=2000
-Height=6740
+Height=7154
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=2000
-ClientHeight=6740
+ClientHeight=7154
 TBDockHeight=4885
 LRDockWidth=7151
 Dockable=1
@@ -693,8 +725,8 @@ Create=1
 Visible=0
 Docked=1
 State=0
-Left=370
-Top=827
+Left=0
+Top=0
 Width=2854
 Height=3212
 MaxLeft=-1
@@ -715,11 +747,11 @@ State=0
 Left=0
 Top=0
 Width=3823
-Height=1163
+Height=1183
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3823
-ClientHeight=1163
+ClientHeight=1183
 TBDockHeight=1548
 LRDockWidth=8740
 Dockable=1
@@ -760,11 +792,11 @@ State=0
 Left=0
 Top=0
 Width=2000
-Height=6740
+Height=7154
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=2000
-ClientHeight=6740
+ClientHeight=7154
 TBDockHeight=4885
 LRDockWidth=5307
 Dockable=1
@@ -824,15 +856,15 @@ Create=1
 Visible=0
 Docked=1
 State=0
-Left=0
-Top=18
+Left=8
+Top=8
 Width=3823
-Height=1404
+Height=1423
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3823
-ClientHeight=1404
-TBDockHeight=1404
+ClientHeight=1423
+TBDockHeight=1423
 LRDockWidth=3823
 Dockable=1
 StayOnTop=0

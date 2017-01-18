@@ -124,7 +124,7 @@ begin
  f_Mind:= f_MindCenter.RandomMind;
  if f_Mind <> nil then
  begin
-  Caption:= f_Mind.EnglishCaption;
+  Caption:= f_Mind.Caption;
   Target:= f_Mind.FindTarget(Self) ;
  end;
  Head.Value:= ws_HeadL;
