@@ -1,12 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899.12.30 00:00:00.000.460,=C:\Users\Дмитрий\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.147,D:\Clouds\GitHub\ww\WormsPoligon2016.dproj=C:\Users\Дмитрий\Documents\Embarcadero\Studio\Projects\Project2.dproj</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.859,D:\Clouds\GitHub\WormsWorld\wwFullScreenForm.dfm=D:\Clouds\GitHub\WormsWorld\Unit1.dfm</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.872,=C:\Users\Дмитрий\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.143,=D:\Clouds\GitHub\ww\PoligonForm.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.859,D:\Clouds\GitHub\WormsWorld\wwFullScreenForm.pas=D:\Clouds\GitHub\WormsWorld\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.859,D:\Clouds\GitHub\WormsWorld\Unit1.pas=D:\Clouds\GitHub\WormsWorld\wwFullScreenForm.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.725,=D:\Clouds\GitHub\WormsWorld\Unit1.pas</Transaction>
-  </Transactions>  <BT_BuildType>Debug</BT_BuildType>
+    <Transaction>1899.12.30 00:00:00.000.859,D:\Clouds\GitHub\WormsWorld\Unit1.dfm=D:\Clouds\GitHub\WormsWorld\wwFullScreenForm.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.872,=C:\Users\Дмитрий\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.147,C:\Users\Дмитрий\Documents\Embarcadero\Studio\Projects\Project2.dproj=D:\Clouds\GitHub\ww\WormsPoligon2016.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.143,=D:\Clouds\GitHub\ww\PoligonForm.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.460,=C:\Users\Дмитрий\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+  </Transactions>
+	<BT_BuildType>Debug</BT_BuildType>
 </BorlandProject>
