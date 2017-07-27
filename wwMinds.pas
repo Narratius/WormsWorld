@@ -16,7 +16,9 @@ type
   FTotalWorms: Integer;
   FTotalAge: Int64;
   FAverageThinkTime: Integer;
+    FEnabled: Boolean;
   function GetAverageLength: Integer;
+   procedure SetEnabled(const Value: Boolean);
  protected
   function CheckPoint(From: TPoint; Dir: TwwDirection): Boolean;
   function GetCaption: String; virtual; abstract;
@@ -39,6 +41,7 @@ type
    read GetAverageLength;
   property Caption: String
    read GetCaption;
+  property Enabled: Boolean read FEnabled write SetEnabled;
   property EnglishCaption: String
    read GetEnglishCaption;
   property MaxThingLength: Integer read FMaxThingLength;
@@ -102,7 +105,7 @@ function TwwMind.Think(aFor: TwwThing): TwwDirection;
 begin
  FMaxThingLength:= Max(aFor.Length, MaxThingLength);
  FMaxThingAge:= Max(FMaxThingAge, aFor.Age);
- 
+
  f_CurrentThing:= aFor;
  if (Thing <> nil) and (Thing is TwwWorm) then
  begin
@@ -135,7 +138,13 @@ begin
   FTotalAge:= ReadInteger(Caption, 'TotalAge', 0);
   FTotalWorms:= ReadInteger(Caption, 'Worms', 0);
   FAverageThinkTime:= ReadInteger(Caption, 'ThinkTime', 0);
+  FEnabled:= ReadBool(Caption, 'Enabled', True);
  end;
+end;
+
+procedure TwwMind.SetEnabled(const Value: Boolean);
+begin
+  FEnabled := Value;
 end;
 
 procedure TwwMind.WriteValues(DataFile: TIniFile);
@@ -149,6 +158,7 @@ begin
   WriteInteger(Caption, 'TotalAge', FTotalAge);
   WriteInteger(Caption, 'Worms', FTotalWorms);
   WriteInteger(Caption, 'ThinkTime', FAverageThinkTime);
+  WriteBool(Caption, 'Enabled', FEnabled);
  end;
 end;
 
@@ -211,22 +221,28 @@ begin
   l_Total:= 0;
   FillChar(l_arr, SizeOf(l_Arr), 0);
   for i:= 0 to Pred(Count) do
-   if Minds[i].AverageLength = 0 then
-    Inc(l_Total, 50)
-   else
-    Inc(l_Total, Minds[i].AverageLength);
+    if Minds[i].Enabled then
+    begin
+     if Minds[i].AverageLength = 0 then
+      Inc(l_Total, 50)
+     else
+      Inc(l_Total, Minds[i].AverageLength);
+    end;
   index:= 0;
   for i:= 0 to Pred(Count) do
   begin
-   if Minds[i].AverageLength = 0 then
-    l_Weight:= 50*100 div l_Total
-   else
-    l_Weight:= Minds[i].AverageLength*100 div l_Total;
-   for j:= index to Pred(index+l_Weight) do
-    l_Arr[j]:= i;
-   Minds[i].Weight:= l_Weight;
-   Inc(Index, l_Weight);
-  end;
+   if Minds[i].Enabled then
+   begin
+     if Minds[i].AverageLength = 0 then
+      l_Weight:= Round(50*100 / l_Total)
+     else
+      l_Weight:= Round(Minds[i].AverageLength*100 / l_Total);
+     for j:= index to Pred(index+l_Weight) do
+      l_Arr[j]:= i;
+     Minds[i].Weight:= l_Weight;
+     Inc(Index, l_Weight);
+   end; // Minds[i].Enabled
+  end; // for i
   index:= RandomFrom(l_Arr);
   Result:= Minds[index];
  end
@@ -237,6 +253,7 @@ end;
 procedure TwwMindCenter.AddMind(aMind: TwwMind);
 begin
  Add(aMind);
+ aMind.Enabled:= True;
  aMind.ReadValues(FDataFile);
 end;
  function CompareLength(Item1, Item2: TObject): Integer;

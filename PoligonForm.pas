@@ -7,7 +7,7 @@ uses
   Dialogs, ComCtrls, StdCtrls, WormsWorld, XPMan, Grids;
 
 type
-  TForm1 = class(TForm)
+  TPoligonMainForm = class(TForm)
     GroupBox1: TGroupBox;
     Label1: TLabel;
     MapSizeCombo: TComboBox;
@@ -41,7 +41,7 @@ type
   end;
 
 var
-  Form1: TForm1;
+  PoligonMainForm: TPoligonMainForm;
 
 implementation
 
@@ -49,7 +49,7 @@ implementation
 Uses
  Types, wwClasses, wwTypes;
 
-procedure TForm1.StartButtonClick(Sender: TObject);
+procedure TPoligonMainForm.StartButtonClick(Sender: TObject);
 var
  Bounds: TRect;
  i: Integer;
@@ -152,12 +152,12 @@ begin
 end;
 
 
-procedure TForm1.StopButtonClick(Sender: TObject);
+procedure TPoligonMainForm.StopButtonClick(Sender: TObject);
 begin
  FCancel:= True;
 end;
 
-procedure TForm1.MapButtonClick(Sender: TObject);
+procedure TPoligonMainForm.MapButtonClick(Sender: TObject);
 begin
  FMapVisible:= not FMapVisible;
  if FMapVisible then
@@ -173,7 +173,7 @@ begin
 
 end;
 
-procedure TForm1.FormCreate(Sender: TObject);
+procedure TPoligonMainForm.FormCreate(Sender: TObject);
 begin
  Randomize;
  ClientHeight:= GroupBox2.Top+GroupBox2.Height+10;
@@ -185,7 +185,7 @@ const
  WormColor : array[0..4] of TColor = (clBlue, clGreen, clTeal, clPurple, clGray);
  TargetColor : array[-1..1] of TColor = (clLtGray, clRed, clMaroon);
 
-procedure TForm1.MapGridDrawCell(Sender: TObject; ACol, ARow: Integer;
+procedure TPoligonMainForm.MapGridDrawCell(Sender: TObject; ACol, ARow: Integer;
   Rect: TRect; State: TGridDrawState);
 var
  l_T: TwwThing;
@@ -205,14 +205,14 @@ begin
  end; // FCancel
 end;
 
-procedure TForm1.NewIdea(Sender: TObject);
+procedure TPoligonMainForm.NewIdea(Sender: TObject);
 begin
  if FMapVisible and FShowIdeas then
   MapGrid.Refresh;
  Application.ProcessMessages;
 end;
 
-procedure TForm1.CheckBox1Click(Sender: TObject);
+procedure TPoligonMainForm.CheckBox1Click(Sender: TObject);
 begin
  FShowIdeas:= CheckBox1.Checked;
 end;
