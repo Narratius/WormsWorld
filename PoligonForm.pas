@@ -4,7 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ComCtrls, StdCtrls, WormsWorld, XPMan, Grids;
+  Dialogs, ComCtrls, StdCtrls, WormsWorld, Grids, Vcl.ExtCtrls,
+  System.ImageList, Vcl.ImgList, wwFullScreenForm;
 
 type
   TPoligonMainForm = class(TForm)
@@ -22,6 +23,7 @@ type
     MapButton: TButton;
     MapGrid: TDrawGrid;
     CheckBox1: TCheckBox;
+    Worms8ImageList: TImageList;
     procedure StartButtonClick(Sender: TObject);
     procedure StopButtonClick(Sender: TObject);
     procedure MapButtonClick(Sender: TObject);
@@ -29,12 +31,14 @@ type
     procedure MapGridDrawCell(Sender: TObject; ACol, ARow: Integer;
       Rect: TRect; State: TGridDrawState);
     procedure CheckBox1Click(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
    FWorld: TWormsField;
    FCAncel: Boolean;
    FMapVisible: Boolean;
-    FShowIdeas: Boolean;
+   FShowIdeas: Boolean;
+   f_FSForm: TFSForm;
    procedure NewIdea(Sender: TObject);
   public
     { Public declarations }
@@ -47,7 +51,7 @@ implementation
 
 {$R *.dfm}
 Uses
- Types, wwClasses, wwTypes;
+ Types, wwClasses, wwTypes, wwUtils;
 
 procedure TPoligonMainForm.StartButtonClick(Sender: TObject);
 var
@@ -104,6 +108,7 @@ begin
   Itm.SubItems.Add('');
   Itm.SubItems.Add('');
   Itm.SubItems.Add('');
+  Itm.SubItems.Add('');
  end; // for i
  FCancel:= False;
  StartButton.Enabled:= False;
@@ -117,21 +122,39 @@ begin
   FWorld.InstantRessurectTargets:= True;
   FWorld.InstantRessurectWorms:= True;
   FWorld.OnNewIdea:= NewIdea;
-  FCancel:= False; FShowIdeas:= False;
-  repeat
-   FWorld.Update;
-   for i:= 0 to Pred(FWorld.WormsCount) do
-   begin
-    itm:= StatisticView.Items[i];
-    itm.Caption:= FWorld.Worms[i].Mind.Caption;
-    itm.SubItems.Strings[0]:= IntToStr(FWorld.Worms[i].Length);
-    itm.SubItems.Strings[1]:= IntToStr(FWorld.Worms[i].Mind.MaxThingLength);
-    itm.SubItems.Strings[2]:= IntToStr(FWorld.Worms[i].Mind.Weight)+'%';
-   end; // for i
-   MapGrid.Invalidate;
-   Application.ProcessMessages;
-   Sleep(25);
-  until FCancel;
+
+  f_FSForm:= TFSForm.Create(Application);
+  try
+    f_FSForm.World:= fWorld;
+
+    FCancel:= False; FShowIdeas:= False;
+    repeat
+     FWorld.Update;
+     for i:= 0 to Pred(FWorld.WormsCount) do
+     begin
+      itm:= StatisticView.Items[i];
+      itm.Caption:= FWorld.Worms[i].Mind.Caption;
+      itm.SubItems.Strings[0]:= IntToStr(FWorld.Worms[i].Length);
+      itm.SubItems.Strings[1]:= IntToStr(FWorld.Worms[i].Mind.MaxThingLength);
+      itm.SubItems.Strings[2]:= IntToStr(FWorld.Worms[i].Mind.Weight)+'%';
+      Itm.SubItems.Strings[3]:= IntToStr(FWorld.Worms[i].Age);
+     end; // for i
+     if FMapVisible then
+     begin
+    //  MapGrid.Invalidate;
+    //  WorldPaintBox.Invalidate;
+      if f_FSForm.Visible then
+       f_FSForm.Invalidate
+      else
+       FMapVisible:= False;
+     end;
+     Application.ProcessMessages;
+     Sleep(25);
+    until FCancel;
+  finally
+    FreeAndNil(f_FSForm);
+  end;
+
   FWorld.MindCenter.Resort;
   StatisticView.Items.Clear;
   for i:= Pred(FWorld.MindCenter.Count) downto 0 do
@@ -158,8 +181,17 @@ begin
 end;
 
 procedure TPoligonMainForm.MapButtonClick(Sender: TObject);
+var
+ l_Form: TFSForm;
 begin
  FMapVisible:= not FMapVisible;
+
+ if FMapVisible then
+ begin
+   f_FSForm.Show;
+ end;
+
+ (*
  if FMapVisible then
  begin
   ClientHeight:= MapGrid.Top + MapGrid.Height + 10;
@@ -170,14 +202,20 @@ begin
   ClientHeight:= GroupBox2.Top+GroupBox2.Height+10;
   Width:=550;
  end;
+*)
+end;
 
+procedure TPoligonMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  StopButton.Click;
 end;
 
 procedure TPoligonMainForm.FormCreate(Sender: TObject);
 begin
+ DoubleBuffered:= True;
  Randomize;
  ClientHeight:= GroupBox2.Top+GroupBox2.Height+10;
- Width:=550;
+ //Width:=550;
  FMapVisible:= False;
 end;
 

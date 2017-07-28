@@ -44,42 +44,38 @@ end;
 function TDummyMind.Thinking: TwwDirection;
 var
   l_W: TwwWorm;
-  NewHead: TPoint;
-  TargetDir, NewDir: TwwDirection;
-  LegalDirs: TwwDirections;
-//  B: Boolean;
+  l_NewHead: TPoint;
+  l_TargetDir, l_NewDir: TwwDirection;
+  l_LegalDirs: TwwDirections;
 begin
  l_W:= Thing as TwwWorm;
- TargetDir:= CalcDir(l_W.Head.Position, l_W.Target.Head.Position, l_W.Favorite);
- if (TargetDir = l_W.ToNeck) then
+ l_TargetDir:= CalcDir(l_W.Head.Position, l_W.Target.Head.Position, l_W.Favorite);
+ if (l_TargetDir = l_W.ToNeck) then
  begin
   if l_W.Favorite = ftVertical then
-   TargetDir:= CalcDir(l_W.Head.Position, l_W.Target.Head.Position, ftHorizontal)
+   l_TargetDir:= CalcDir(l_W.Head.Position, l_W.Target.Head.Position, ftHorizontal)
   else
-   TargetDir:= CalcDir(l_W.Head.Position, l_W.Target.Head.Position, ftVertical)
+   l_TargetDir:= CalcDir(l_W.Head.Position, l_W.Target.Head.Position, ftVertical)
  end;
- NewDir:= TargetDir;
- MovePoint(l_W.Head.Position, NewDir, NewHead);
- LegalDirs:= MoveDirs;
- if IsBusy(NewHead) then
+ l_NewDir:= l_TargetDir;
+ MovePoint(l_W.Head.Position, l_NewDir, l_NewHead);
+ if IsBusy(l_NewHead) then
  begin
-  Exclude(LegalDirs, TargetDir);
-  //Exclude(LegalDirs, l_W.ToNeck);
-  if IsMe(NewHead) then
+  l_LegalDirs:= MoveDirs;
+  Exclude(l_LegalDirs, l_TargetDir);
+  if IsMe(l_NewHead) then
   begin
-   NewDir:= l_W.ToTail(NewHead);
-   Exclude(LegalDirs, InvertDir(NewDir));
+   l_NewDir:= l_W.ToTail(l_NewHead);
+   Exclude(l_LegalDirs, InvertDir(l_NewDir));
    repeat
-    if not CheckPoint(l_W.Head.Position, NewDir) then
+    if not CheckPoint(l_W.Head.Position, l_NewDir) then
     begin
-     Exclude(LegalDirs, NewDir);
-     if LegalDirs <> [] then
-     begin
-      NewDir:= ShiftDir(NewDir);
-     end
+     Exclude(l_LegalDirs, l_NewDir);
+     if l_LegalDirs <> [] then
+      l_NewDir:= ShiftDir(l_NewDir)
      else
      begin
-      NewDir:= dtStop;
+      l_NewDir:= dtStop;
       break;
      end;
     end
@@ -89,16 +85,16 @@ begin
   end
   else
   repeat
-    if not CheckPoint(l_W.Head.Position, NewDir) then
+    if not CheckPoint(l_W.Head.Position, l_NewDir) then
     begin
-     Exclude(LegalDirs, NewDir);
-     if LegalDirs <> [] then
+     Exclude(l_LegalDirs, l_NewDir);
+     if l_LegalDirs <> [] then
      begin
-      NewDir:= ShiftDir(NewDir);
+      l_NewDir:= ShiftDir(l_NewDir);
      end
      else
      begin
-      NewDir:= dtStop;
+      l_NewDir:= dtStop;
       break;
      end;
     end
@@ -106,8 +102,7 @@ begin
      break
    until False;
  end;
-// B:= CheckPoint(l_W.Head.Position, NewDir);
- Result:= NewDir;
+ Result:= l_NewDir;
 end;
 
 end.
