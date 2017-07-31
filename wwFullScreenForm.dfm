@@ -1,11 +1,17 @@
 object FSForm: TFSForm
   Left = 0
   Top = 0
+  Margins.Left = 0
+  Margins.Top = 0
+  Margins.Right = 0
+  Margins.Bottom = 0
+  VertScrollBar.Visible = False
   BorderStyle = bsNone
   Caption = 'FSForm'
   ClientHeight = 338
   ClientWidth = 651
-  Color = clBtnFace
+  Color = clWindow
+  Ctl3D = False
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -23,7 +29,17 @@ object FSForm: TFSForm
     Top = 0
     Width = 651
     Height = 338
+    Margins.Left = 0
+    Margins.Top = 0
+    Margins.Right = 0
+    Margins.Bottom = 0
     Align = alClient
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
     OnClick = FormClick
     OnPaint = WorldPaintBoxPaint
     ExplicitLeft = 160
@@ -37,7 +53,7 @@ object FSForm: TFSForm
     Left = 144
     Top = 16
     Bitmap = {
-      494C010148007800340008000800FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010148007800380008000800FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000020000000980000000100200000000000004C
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -675,7 +691,7 @@ object FSForm: TFSForm
     Left = 32
     Top = 16
     Bitmap = {
-      494C010148000801500010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010148000801540010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003001000001002000000000000030
       0100000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

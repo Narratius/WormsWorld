@@ -33,6 +33,9 @@ const
   ws_Target = 15; // цель
 
 const
+  weAny = [weLive, weNotLive];
+
+const
   MoveDirs = [dtLeft, dtUp, dtRight, dtDown];
   
 implementation

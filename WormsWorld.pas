@@ -51,7 +51,8 @@ implementation
 
 Uses
  SysUtils, VCL.Forms,
- wwDummyMind, wwUtils, wwSimpleMind, wwMaratMinds, wwStarMind;
+ wwDummyMind, wwUtils, wwSimpleMind, wwMaratMinds, wwStarMind,
+ wwFirst;
 
 { TWormsField }
 
@@ -72,6 +73,7 @@ begin
    AddMind(TLazyMind.Create);
    AddMind(TGourmetMind.Create);
    AddMind(TAStarMind.Create);
+   AddMind(TFirstMind.Create);
   end;
 end;
 

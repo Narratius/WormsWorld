@@ -54,13 +54,13 @@ object PoligonMainForm: TPoligonMainForm
       Style = csDropDownList
       ItemIndex = 4
       TabOrder = 0
-      Text = '1980x1080'
+      Text = '1920x1080'
       Items.Strings = (
         '640'#1093'480'
         '800'#1093'600'
         '1024'#1093'768'
         '1280'#1093'1024'
-        '1980x1080'
+        '1920x1080'
         '3860x2160')
     end
     object WormsCountCombo: TComboBox
@@ -135,7 +135,7 @@ object PoligonMainForm: TPoligonMainForm
       Columns = <
         item
           Caption = #1048#1084#1103
-          Width = 100
+          Width = 150
         end
         item
           Alignment = taRightJustify
@@ -152,6 +152,7 @@ object PoligonMainForm: TPoligonMainForm
         end
         item
           Caption = #1042#1086#1079#1088#1072#1089#1090
+          Width = 60
         end>
       TabOrder = 0
       ViewStyle = vsReport
@@ -182,120 +183,6 @@ object PoligonMainForm: TPoligonMainForm
     Options = [goFixedVertLine, goFixedHorzLine, goRangeSelect]
     TabOrder = 5
     OnDrawCell = MapGridDrawCell
-    ColWidths = (
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4)
-    RowHeights = (
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4
-      4)
   end
   object CheckBox1: TCheckBox
     Left = 8
@@ -304,6 +191,7 @@ object PoligonMainForm: TPoligonMainForm
     Height = 17
     Caption = #1054#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1084#1099#1089#1083#1080
     TabOrder = 6
+    Visible = False
     OnClick = CheckBox1Click
   end
   object Worms8ImageList: TImageList
@@ -312,7 +200,7 @@ object PoligonMainForm: TPoligonMainForm
     Left = 360
     Top = 8
     Bitmap = {
-      494C010148007800380008000800FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101480078003C0008000800FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000020000000980000000100200000000000004C
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

@@ -22,23 +22,23 @@ Type
  TwwThing = class(TObject)
  private
   f_Points: TObjectList;
-    f_IsDead: Boolean;
-    f_Caption: String;
-    f_Direction: TwwDirection;
-    f_Entity: TwwEntity;
+  f_IsDead: Boolean;
+  f_Caption: String;
+  f_Direction: TwwDirection;
+  f_Entity: TwwEntity;
   FVariety: Integer;
   FWorld: TwwWorld;
   FAge: Integer;
   FAbsoluteIndex: Integer;
  private
-    function GetHead: TwwPoint;
-    function GetIsLive: Boolean;
-    function GetLength: Integer;
-    function GetPoint(Index: Integer): TwwPoint;
-    function GetTail: TwwPoint;
-    procedure SetIsDead(const Value: Boolean);
-    procedure SetIsLive(const Value: Boolean);
-    procedure SetLength(const Value: Integer);
+  function GetHead: TwwPoint;
+  function GetIsLive: Boolean;
+  function GetLength: Integer;
+  function GetPoint(Index: Integer): TwwPoint;
+  function GetTail: TwwPoint;
+  procedure SetIsDead(const Value: Boolean);
+  procedure SetIsLive(const Value: Boolean);
+  procedure SetLength(const Value: Integer);
  protected
   procedure CorrectSegments; virtual;
   procedure Move;
@@ -353,7 +353,7 @@ begin
  Result:= World.IsBusy(aPoint);
 end;
 
-function TwwThing.IsFree(const aPOint: TPoint; aWhat: TwwEntities = [weLive]): 
+function TwwThing.IsFree(const aPOint: TPoint; aWhat: TwwEntities = [weLive]):
     Boolean;
 begin
  Result:= World.IsFree(aPoint, aWhat);
@@ -369,7 +369,7 @@ begin
  repeat
   A.X := Random(World.Size.Right-5) + 5;
   A.Y := Random(World.Size.Bottom-2) + 1;
- until IsFree(A);
+ until IsFree(A, weAny);
  Length:= DefaultLength;
  Head.Position:= A;
 end;
@@ -555,8 +555,9 @@ end;
 
 function TwwWorld.IsLegal(aPoint: TPoint): Boolean;
 begin
- Result := InRange(aPoint.X, f_Bounds.Left, f_Bounds.Right) and
-           InRange(aPoint.Y, f_Bounds.Top, f_Bounds.Bottom);
+ Result:= f_Bounds.Contains(aPoint);
+// Result := InRange(aPoint.X, f_Bounds.Left, f_Bounds.Right) and
+//           InRange(aPoint.Y, f_Bounds.Top, f_Bounds.Bottom);
 end;
 
 procedure TwwWorld.AddThingToMap(aThing: TwwThing);

@@ -83,7 +83,7 @@ begin
    end;
   4:
    begin
-    Bounds.Right:= 1980 div 16;
+    Bounds.Right:= 1920 div 16;
     Bounds.Bottom:= 1080 div 16;
    end;
   5:

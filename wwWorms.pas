@@ -80,6 +80,18 @@ var
  l_T: TwwThing;
 begin
  // ѕроверить, €вл€етс€ ли данна€ точка нашей целью
+ Result:= False;
+ l_T:= World.ThingAt(aPoint);
+ if (l_T <> nil) and (l_T.Entity = weNotLive) then
+ begin
+  Enlarge(TwwTarget(Target).Power);
+  Inc(FTargetCount);
+  Target.Die;
+  Target:= nil;
+  Result:= True;
+ end
+
+ (*
  if Equal(aPoint, Target.Head.Position) then
  begin
   Enlarge(TwwTarget(Target).Power);
@@ -92,7 +104,8 @@ begin
  begin
   l_T:= World.ThingAt(aPoint);
   Result:= (l_T = nil) or (l_T.Entity = weNotLive);
- end; 
+ end;
+ *)
 end;
 
 function TwwWorm.GetDefaultLenght: Integer;
@@ -124,7 +137,7 @@ begin
  f_Mind:= f_MindCenter.RandomMind;
  if f_Mind <> nil then
  begin
-  Caption:= f_Mind.EnglishCaption;
+  Caption:= f_Mind.Caption;
   Target:= f_Mind.FindTarget(Self) ;
  end;
  Head.Value:= ws_HeadL;

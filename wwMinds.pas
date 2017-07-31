@@ -213,7 +213,7 @@ end;
 function TwwMindCenter.RandomMind: TwwMind;
 var
  l_Total, l_Weight: Integer;
- i,j, index: Integer;
+ i,j, l_index: Integer;
  l_Arr: array[0..99] of Integer;
 begin
  if Count > 0 then
@@ -221,6 +221,7 @@ begin
   l_Total:= 0;
   FillChar(l_arr, SizeOf(l_Arr), 0);
   for i:= 0 to Pred(Count) do
+  begin
     if Minds[i].Enabled then
     begin
      if Minds[i].AverageLength = 0 then
@@ -228,7 +229,8 @@ begin
      else
       Inc(l_Total, Minds[i].AverageLength);
     end;
-  index:= 0;
+  end; // for i
+  l_index:= 0;
   for i:= 0 to Pred(Count) do
   begin
    if Minds[i].Enabled then
@@ -237,14 +239,14 @@ begin
       l_Weight:= Round(50*100 / l_Total)
      else
       l_Weight:= Round(Minds[i].AverageLength*100 / l_Total);
-     for j:= index to Pred(index+l_Weight) do
+     for j:= l_index to Pred(Max(99, l_index+l_Weight)) do
       l_Arr[j]:= i;
+     Inc(l_Index, l_Weight);
      Minds[i].Weight:= l_Weight;
-     Inc(Index, l_Weight);
    end; // Minds[i].Enabled
   end; // for i
-  index:= RandomFrom(l_Arr);
-  Result:= Minds[index];
+  l_index:= RandomFrom(l_Arr);
+  Result:= Minds[l_index];
  end
  else
   Result:= nil;
