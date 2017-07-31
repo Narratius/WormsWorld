@@ -87,7 +87,7 @@ begin
   Enlarge(TwwTarget(Target).Power);
   Inc(FTargetCount);
   Target.Die;
-  Target:= nil;
+  //Target:= nil;
   Result:= True;
  end
 

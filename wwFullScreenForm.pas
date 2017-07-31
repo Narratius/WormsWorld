@@ -74,6 +74,7 @@ var
  Y: Single;
  l_Draw: Boolean;
  l_SpriteSize: Integer;
+ l_WormIndex: Integer;
 begin
   l_Rect:= WorldPaintBox.ClientRect;
   l_Rect.Height:= l_Rect.Height+ WorldPaintBox.Canvas.Font.Height;
@@ -86,9 +87,6 @@ begin
     Brush.Color:= clBlack;
     FillRect(l_Rect);
   end;
-
-
-
   l_SpriteSize:= WorldPaintBox.ClientWidth div FWorld.Size.Width;
   if l_SpriteSize > 15 then
   begin
@@ -113,11 +111,12 @@ begin
 
 
   j:= 0;
+  l_WormIndex:= 0;
   for i:= 0 to Pred(FWorld.Count) do
   begin
    l_T:= FWorld.Things[i];
 
-   if not l_T.IsDead then
+   if l_T.IsLive then
    begin
     for k:= 0 to Pred(l_T.Length) do
     begin
@@ -144,10 +143,11 @@ begin
       Brush.Color:= clBlack;
       Font.Color:= WormColors[l_T.Variety];
       Font.Style:= [fsBold];
-      TextOut(i*(WorldPaintBox.ClientWidth div FWorld.WormsCount),
+      TextOut(l_WormIndex*(WorldPaintBox.ClientWidth div FWorld.WormsCount),
                 WorldPaintBox.ClientHeight+WorldPaintBox.Canvas.Font.Height,
                 Format('%s: %d за %d ходов', [l_T.Caption, l_T.Length, l_T.Age]));
     end;
+    Inc(l_WormIndex);
    end; // weLive
   end; // for i
  end; // FCancelend;

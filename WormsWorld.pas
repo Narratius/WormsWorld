@@ -92,7 +92,7 @@ begin
   for i:= 0 to Pred(Count) do
   begin
    l_T:= Things[i];
-   if (l_T is TwwTarget) and l_T.IsLive then
+   if (l_T is TwwTarget){ and l_T.IsLive} then
     Inc(Result);
   end;
 end;
@@ -107,7 +107,7 @@ begin
   for i:= 0 to Pred(Count) do
   begin
    l_T:= Things[i];
-   if (l_T is TwwTarget) and (l_T.IsLive) then
+   if (l_T is TwwTarget){ and (l_T.IsLive)} then
    begin
     if (l_Current = Index) then
     begin
@@ -165,9 +165,12 @@ begin
   Result := nil;
   MinIndex:= -1;
   MinDelta:= High(MinDelta);
+  if TargetCount = 0 then
+   RessurectTargets;
   for i:= 0 to Pred(TargetCount) do
   begin
-   if Targets[i].IsLive then
+   if not Targets[i].IsLive then
+     Targets[i].Ressurect;
    begin
     l_TD:= CalcDistance(aPoint, Targets[i].Head.Position);
     if l_TD < MinDelta then
@@ -188,6 +191,8 @@ var
 begin
   l_Power:= 0;
   Result:= nil;
+  if TargetCount = 0 then
+    RessurectTargets;
   for i:= 0 to Pred(TargetCount) do
   begin
     if (Targets[i].Power > l_Power) and Targets[i].IsLive then

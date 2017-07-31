@@ -334,6 +334,8 @@ end;
 
 procedure TwwThing.Update;
 begin
+ if IsDead then
+   Ressurect;
  Inc(FAge);
  Think;
  Move;

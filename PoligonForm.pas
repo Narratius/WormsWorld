@@ -117,8 +117,8 @@ begin
  GroupBox1.Enabled:= False;
  FWorld:= TWormsField.Create(Bounds);
  try
-  FWorld.MaxWormsCount:= Succ(WormsCountCombo.ItemIndex);
   FWorld.MaxTargetCount:= Succ(TargetCountCombo.ItemIndex);
+  FWorld.MaxWormsCount:= Succ(WormsCountCombo.ItemIndex);
   FWorld.InstantRessurectTargets:= True;
   FWorld.InstantRessurectWorms:= True;
   FWorld.OnNewIdea:= NewIdea;
