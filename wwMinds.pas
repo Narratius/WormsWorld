@@ -239,7 +239,7 @@ begin
       l_Weight:= Round(50*100 / l_Total)
      else
       l_Weight:= Round(Minds[i].AverageLength*100 / l_Total);
-     for j:= l_index to Pred(Max(99, l_index+l_Weight)) do
+     for j:= l_index to Pred(Min(100, l_index+l_Weight)) do
       l_Arr[j]:= i;
      Inc(l_Index, l_Weight);
      Minds[i].Weight:= l_Weight;
