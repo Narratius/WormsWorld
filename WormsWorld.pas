@@ -29,6 +29,7 @@ type
     constructor Create(const aBounds: TRect);
     destructor Destroy; override;
     function NearestTarget(const aPoint: TPoint): TwwTarget;
+    function NearestWorm(const aPoint: TPoint): TwwWorm;
     function PowerestTarget: TwwTarget;
     function RandomTarget(const aPoint: TPoint): TwwTarget;
     procedure Update; override;
@@ -182,6 +183,34 @@ begin
   end;
   if MinIndex > -1 then
    Result:= Targets[MinIndex];
+end;
+
+function TWormsField.NearestWorm(const aPoint: TPoint): TwwWorm;
+var
+  I: Integer;
+  MinDelta: Integer;
+  MinIndex: Integer;
+  l_TD: Integer;
+begin
+  Result := nil;
+  MinIndex:= -1;
+  MinDelta:= High(MinDelta);
+  if WormsCount = 0 then
+   RessurectWorms;
+  for i:= 0 to Pred(WormsCount) do
+  begin
+   if Worms[i].IsLive then
+   begin
+    l_TD:= CalcDistance(aPoint, Worms[i].Head.Position);
+    if l_TD < MinDelta then
+    begin
+     MinDelta:= l_TD;
+     MinIndex:= i;
+    end;
+   end;
+  end;
+  if MinIndex > -1 then
+   Result:= Worms[MinIndex];
 end;
 
 function TWormsField.PowerestTarget: TwwTarget;
