@@ -2,7 +2,8 @@ program WormsPoligon2016;
 
 uses
   Vcl.Forms,
-  PoligonForm in 'PoligonForm.pas' {PoligonMainForm};
+  PoligonForm in 'PoligonForm.pas' {PoligonMainForm},
+  wwCrazyApple in 'wwCrazyApple.pas';
 
 {$R *.res}
 
