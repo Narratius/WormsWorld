@@ -6,33 +6,54 @@ Uses
  wwClasses, wwTypes, wwMinds;
 
 type
-  TwwTarget = class (TwwThing)
+  TwwThinkingThing = class(TwwThing)
+  private
+    f_Mind: TwwMind;
+    f_MindCenter: TwwMindCenter;
+    f_Direction: TwwDirection;
+  protected
+    function Eat(const aPoint: TPoint): Boolean; virtual;
+    procedure Move; virtual;
+    procedure WhileStop; virtual;
+    procedure Think; virtual;
+  public
+    constructor Create(aMindCenter: TwwMindCenter); reintroduce; virtual;
+    procedure Update; override;
+    procedure Ressurect; override;
+  public
+    property Direction: TwwDirection
+     read f_Direction
+     write f_Direction;
+  end;
+
+  TwwTarget = class (TwwThinkingThing)
   private
     f_Power: Integer;
     FPower: Integer;
+  protected
+    procedure Think; override;
   public
-    constructor Create(aWorld: TwwWorld); reintroduce;
+    constructor Create(aMindCenter: TwwMindCenter); override;
     procedure Ressurect; override;
     property Power: Integer read FPower;
   end;
 
-  TwwWorm = class (TwwThing)
+  TwwWorm = class (TwwThinkingThing)
   private
-    f_Mind: TwwMind;
-    f_MindCenter: TwwMindCenter;
     FTarget: TwwThing;
     FFavorite: TwwFavoriteType;
     FStopTurns: Integer;
     FTargetCount: Integer;
     procedure FindTarget;
   protected
+    procedure CorrectSegments; virtual;
     function GetDefaultLenght: Integer;
     function GetDefaultLength: Integer; override;
+    procedure Move; override;
     procedure Think; override;
     procedure WhileStop; override;
   public
-    constructor Create(aWorld: TwwWorld; aMindCenter: TwwMindCenter; aVariety:
-        Integer); reintroduce;
+    constructor Create(aMindCenter: TwwMindCenter); override;
     procedure Die; override;
     function Eat(const aPOint: TPoint): Boolean; override;
     function IsNeck(const aPoint: TPoint): Boolean;
@@ -65,14 +86,11 @@ const
 {
 *********************************** TwwWorm ************************************
 }
-constructor TwwWorm.Create(aWorld: TwwWorld; aMindCenter: TwwMindCenter;
-    aVariety: Integer);
+constructor TwwWorm.Create(aMindCenter: TwwMindCenter);
 begin
-  inherited Create(aWorld, MinWormLength);
+  inherited Create(aMindCenter);
   Caption:= 'Worm';
   Entity:= weLive;
-  f_MindCenter:= aMindCenter;
-  Variety:= aVariety;
 end;
 
 function TwwWorm.Eat(const aPOint: TPoint): Boolean;
@@ -87,7 +105,6 @@ begin
   Enlarge(TwwTarget(Target).Power);
   Inc(FTargetCount);
   Target.Die;
-  //Target:= nil;
   Result:= True;
  end
 
@@ -126,6 +143,12 @@ begin
    Result:= False;
 end;
 
+procedure TwwWorm.Move;
+begin
+  inherited;
+  CorrectSegments;
+end;
+
 procedure TwwWorm.Ressurect;
 var
  i: Integer;
@@ -134,7 +157,7 @@ var
  {$ENDIF}
 begin
  inherited;
- f_Mind:= f_MindCenter.RandomMind;
+
  if f_Mind <> nil then
  begin
   Caption:= f_Mind.Caption;
@@ -167,10 +190,7 @@ end;
 
 procedure TwwWorm.Think;
 begin
- if f_Mind <> nil then
-  Direction:= f_Mind.Think(Self)
- else
-  Direction:= dtNone;
+ inherited;
  if Direction <> dtStop then
   FStopTurns:= 0;
 end;
@@ -231,9 +251,9 @@ end;
 {
 ********************************** TwwTarget ***********************************
 }
-constructor TwwTarget.Create(aWorld: TwwWorld);
+constructor TwwTarget.Create(aMindCenter: TwwMindCenter);
 begin
-  inherited Create(aWorld, 1);
+  inherited Create(aMindCenter);
   Caption:= 'Target';
   Entity:= weNotLive;
 end;
@@ -247,11 +267,134 @@ begin
   FPower:= TargetPower[Variety];
 end;
 
+procedure TwwTarget.Think;
+begin
+  if Variety = 0 then
+   inherited
+  else
+   Direction:= dtNone;
+end;
+
 procedure TwwWorm.Die;
 begin
-  inherited;
+ inherited;
  if f_Mind <> nil then
   f_Mind.PostMorten(Self);
 end;
 
+procedure TwwWorm.CorrectSegments;
+var
+ i: Integer;
+ l_Value: Integer;
+begin
+ case Direction of
+  dtUp: l_Value:= ws_HeadU;
+  dtDown: l_Value:= ws_HeadD;
+  dtLeft: l_Value:= ws_HeadR;
+  dtRight: l_Value:= ws_HeadL;
+ else
+  l_Value:= Head.Value;
+ end;
+ Head.Value:= l_Value;
+ if Length > 2 then
+  for i:= 1 to Length-2 do
+  begin
+   case BodySegment(Points[Succ(i)].Position, Points[Pred(i)].Position, Points[i].Position) of
+    ctUp, ctDown    : l_Value:= ws_BodyV;
+    ctRight, ctLeft : l_Value:= ws_BodyH;
+    ctLeftUp        : l_Value:= ws_RotUL;
+    ctLeftDown      : l_Value:= ws_RotD;
+    ctRightUp       : l_Value:= ws_RotUR;
+    ctRightDown     : l_Value:= ws_RotL;
+   else
+    l_Value:= Points[i].Value;
+   end; // case
+   Points[i].Value:= l_Value;
+  end; // for i
+ case CalcDir(Points[Pred(Length)].Position, Points[Pred(Pred(Length))].Position, ftVertical) of
+  dtUp: l_Value:= ws_TailU;
+  dtDown: l_Value:= ws_TailD;
+  dtLeft: l_Value:= ws_TailR;
+  dtRight: l_Value:= ws_TailL;
+ else
+  l_Value:= Tail.Value;
+ end;
+ Tail.Value:= l_Value;
+end;
+
+
+{ TwwThinkingThing }
+
+{
+*********************************** TwwThinkingThing ************************************
+}
+constructor TwwThinkingThing.Create(aMindCenter: TwwMindCenter);
+begin
+  inherited Create;
+  Caption:= 'ThinkingThing';
+  Entity:= weLive;
+  f_MindCenter:= aMindCenter;
+end;
+
+procedure TwwThinkingThing.Move;
+var
+ i: Integer;
+ l_Head: TPoint;
+begin
+ if IsAlive and (Direction <> dtNone) then
+ begin
+  if Direction = dtStop then
+   WhileStop
+  else
+  begin
+   l_Head:= MovePoint(Head.Position, Direction);
+
+   if World.IsLegal(l_Head) and
+      (IsFree(l_Head, [weLive, weNotLive]) or Eat(l_Head)) then
+   begin
+    for i:= Pred(Length) downto 1 do
+     Points[i].Position:= Points[Pred(i)].Position;
+    Head.Position:= l_Head;
+
+   end
+   else
+    Die;
+  end;
+ end;
+end;
+
+procedure TwwThinkingThing.Ressurect;
+begin
+  inherited;
+  f_Mind:= f_MindCenter.RandomMind(Entity);
+end;
+
+procedure TwwThinkingThing.Think;
+begin
+ if f_Mind <> nil then
+  Direction:= f_Mind.Think(Self)
+ else
+  Direction:= dtNone;
+end;
+
+procedure TwwThinkingThing.Update;
+begin
+ inherited;
+ Think;
+ Move;
+end;
+
+procedure TwwThinkingThing.WhileStop;
+begin
+
+end;
+
+
+function TwwThinkingThing.Eat(const aPoint: TPoint): Boolean;
+begin
+ Result:= IsFree(aPoint);
+end;
+
+
 end.
+

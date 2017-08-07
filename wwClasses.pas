@@ -24,35 +24,31 @@ Type
   f_Points: TObjectList;
   f_IsDead: Boolean;
   f_Caption: String;
-  f_Direction: TwwDirection;
   f_Entity: TwwEntity;
   FVariety: Integer;
   FWorld: TwwWorld;
   FAge: Integer;
   FAbsoluteIndex: Integer;
+  f_DefaultLength: Integer;
+  f_InstantRessurrect: Boolean;
  private
   function GetHead: TwwPoint;
-  function GetIsLive: Boolean;
+  function GetIsAlive: Boolean;
   function GetLength: Integer;
   function GetPoint(Index: Integer): TwwPoint;
   function GetTail: TwwPoint;
   procedure SetIsDead(const Value: Boolean);
-  procedure SetIsLive(const Value: Boolean);
+  procedure SetIsAlive(const Value: Boolean);
   procedure SetLength(const Value: Integer);
  protected
-  procedure CorrectSegments; virtual;
-  procedure Move;
-  procedure WhileStop; virtual;
   function GetDefaultLength: Integer; virtual;
-  procedure Think; virtual;
  public
-  constructor Create(aWorld: TwwWorld; const aLength: Integer);
+  constructor Create;
   destructor Destroy; override;
   procedure Enlarge(const aDelta: Integer);
   function IsMe(const aPoint: TPoint): Boolean;
   procedure Update; virtual;
   procedure Die; virtual;
-  function Eat(const aPOint: TPoint): Boolean; virtual;
   function IsFree(const aPOint: TPoint; aWhat: TwwEntities = [weLive]): Boolean;
   function IsBusy(const aPOint: TPoint): Boolean;
   procedure Ressurect; virtual;
@@ -66,6 +62,9 @@ Type
    read GetDefaultLength;
   property Head: TwwPoint
    read GetHead;
+  property InstantRessurrect: Boolean
+   read f_InstantRessurrect
+   write f_InstantRessurrect;
   property Tail: TwwPoint
    read GetTail;
   property Length: Integer
@@ -76,15 +75,10 @@ Type
   property IsDead: Boolean
    read f_IsDead
    write SetIsDead;
-  property IsLive: Boolean
-   read GetIsLive
-   write SetIsLive;
+  property IsAlive: Boolean read GetIsAlive write SetIsAlive;
   property Entity: TwwEntity
    read f_Entity
    write f_Entity;
-  property Direction: TwwDirection
-   read f_Direction
-   write f_Direction;
   property Variety: Integer read FVariety write FVariety;
   property World: TwwWorld read FWorld write FWorld;
   property Age: Integer read FAge;
@@ -123,10 +117,12 @@ Type
       overload;
   function IsBusy(const aPoint: TPoint; var aThing: TwwThing; aWhat: TwwEntities
       = [weLive]): Boolean; overload;
+  function GetFree: TPoint;
   function ThingAt(const aPoint: TPoint): TwwThing;
   procedure Update; virtual;
   procedure DeleteThing(aIndex: Integer);
   procedure AddThing(aThing: TwwThing);
+  function GetNearestBorder(aPoint: TPoint): TPoint;
   function IsLegal(aPoint: TPoint): Boolean;
  public
   property Count: Integer
@@ -155,14 +151,14 @@ end;
 
 { TwwThing }
 
-constructor TwwThing.Create(aWorld: TwwWorld; const aLength: Integer);
+constructor TwwThing.Create;
 begin
  inherited Create;
- World:= aWorld;
  f_Points:= TObjectList.Create;
  f_Caption:= '';
- Enlarge(aLength);
+ f_DefaultLength:= 1;
  Entity:= weNotLive;
+ f_InstantRessurrect:= True;
 end;
 
 destructor TwwThing.Destroy;
@@ -217,7 +213,7 @@ begin
   Result:= nil;
 end;
 
-function TwwThing.GetIsLive: Boolean;
+function TwwThing.GetIsAlive: Boolean;
 begin
  Result:= not IsDead;
 end;
@@ -248,79 +244,14 @@ begin
  Result:= PointIndex(aPoint) <> -1;
 end;
 
-procedure TwwThing.Move;
-var
- i: Integer;
- l_Head: TPoint;
-begin
- if IsLive and (Direction <> dtNone) then
- begin
-  if Direction = dtStop then
-   WhileStop
-  else
-  begin
-   l_Head:= MovePoint(Head.Position, Direction);
-   
-   if World.IsLegal(l_Head) and 
-      (IsFree(l_Head, [weLive, weNotLive]) or Eat(l_Head)) then
-   begin
-    for i:= Pred(Length) downto 1 do
-     Points[i].Position:= Points[Pred(i)].Position;
-    Head.Position:= l_Head;
-    CorrectSegments;
-   end
-   else
-    Die;
-  end;
- end;
-end;
 
-procedure TwwThing.CorrectSegments;
-var
- i: Integer;
- l_Value: Integer;
-begin
- case Direction of
-  dtUp: l_Value:= ws_HeadU;
-  dtDown: l_Value:= ws_HeadD;
-  dtLeft: l_Value:= ws_HeadR;
-  dtRight: l_Value:= ws_HeadL;
- else
-  l_Value:= Head.Value;
- end;
- Head.Value:= l_Value;
- if Length > 2 then
-  for i:= 1 to Length-2 do
-  begin
-   case BodySegment(Points[Succ(i)].Position, Points[Pred(i)].Position, Points[i].Position) of
-    ctUp, ctDown    : l_Value:= ws_BodyV;
-    ctRight, ctLeft : l_Value:= ws_BodyH;
-    ctLeftUp        : l_Value:= ws_RotUL;
-    ctLeftDown      : l_Value:= ws_RotD;
-    ctRightUp       : l_Value:= ws_RotUR;
-    ctRightDown     : l_Value:= ws_RotL;
-   else
-    l_Value:= Points[i].Value;
-   end; // case
-   Points[i].Value:= l_Value;
-  end; // for i
- case CalcDir(Points[Pred(Length)].Position, Points[Pred(Pred(Length))].Position, ftVertical) of
-  dtUp: l_Value:= ws_TailU;
-  dtDown: l_Value:= ws_TailD;
-  dtLeft: l_Value:= ws_TailR;
-  dtRight: l_Value:= ws_TailL;
- else
-  l_Value:= Tail.Value;
- end;
- Tail.Value:= l_Value;
-end;
 
 procedure TwwThing.SetIsDead(const Value: Boolean);
 begin
  f_IsDead := Value;
 end;
 
-procedure TwwThing.SetIsLive(const Value: Boolean);
+procedure TwwThing.SetIsAlive(const Value: Boolean);
 begin
  IsDead:= not Value;
 end;
@@ -334,64 +265,54 @@ end;
 
 procedure TwwThing.Update;
 begin
- if IsDead then
+ if IsDead and InstantRessurrect then
    Ressurect;
  Inc(FAge);
- Think;
- Move;
 end;
 
-procedure TwwThing.WhileStop;
-begin
-end;
-
-function TwwThing.Eat(const aPoint: TPoint): Boolean;
-begin
- Result:= IsFree(aPoint);
-end;
 
 function TwwThing.IsBusy(const aPOint: TPoint): Boolean;
 begin
- Result:= World.IsBusy(aPoint);
+ if World <> nil then
+   Result:= World.IsBusy(aPoint)
+ else
+   Result:= True;
 end;
 
 function TwwThing.IsFree(const aPOint: TPoint; aWhat: TwwEntities = [weLive]):
     Boolean;
 begin
- Result:= World.IsFree(aPoint, aWhat);
+ if World <> nil then
+   Result:= World.IsFree(aPoint, aWhat)
+ else
+   Result:= False;
 end;
 
 
 procedure TwwThing.Ressurect;
-var
- A: TPoint;
 begin
  FAge:= 0;
- IsLive:= True;
- repeat
-  A.X := Random(World.Size.Right-5) + 5;
-  A.Y := Random(World.Size.Bottom-2) + 1;
- until IsFree(A, weAny);
- Length:= DefaultLength;
- Head.Position:= A;
+ IsAlive:= False;
+ if World <> nil then
+ begin
+   IsAlive:= True;
+   Length:= DefaultLength;
+   Head.Position:= World.GetFree;
+ end; // World <> nil
 end;
 
 function TwwThing.GetDefaultLength: Integer;
 begin
- Result:= 1;
+ Result:= f_DefaultLength;
 end;
 
-procedure TwwThing.Think;
-begin
-
-end;
 
 function TwwThing.PointIndex(aPoint: TPoint): Integer;
 var
  i: Integer;
 begin
  Result := -1;
- if IsLive then
+ if IsAlive then
  for i:= Pred(Length) downto 0 do
   if Equal(Points[i].Position, aPoint) then
   begin
@@ -507,6 +428,14 @@ begin
  Result:= f_Things.Count;
 end;
 
+function TwwWorld.GetFree: TPoint;
+begin
+  repeat
+   Result.X := Random(Size.Right-5) + 5;
+   Result.Y := Random(Size.Bottom-2) + 1;
+  until IsFree(Result, weAny);
+end;
+
 function TwwWorld.GetThings(Index: Integer): TwwThing;
 begin
  if InRange(Index, 0, Pred(Count)) then
@@ -522,7 +451,7 @@ begin
  for i:= 0 to Pred(Count) do
  begin
   l_T:= Things[i];
-  if l_T.IsLive then
+  if l_T.IsAlive then
    AddThingToMap(l_T);
  end; // for i
  for i:= 0 to Pred(Count) do
@@ -552,6 +481,7 @@ procedure TwwWorld.AddThing(aThing: TwwThing);
 begin
  aThing.FAbsoluteIndex:= f_Things.Count;
  f_Things.Add(aThing);
+ aThing.World:= Self;
  aThing.Ressurect;
 end;
 
@@ -579,11 +509,29 @@ begin
    FMap[i, j]:= -1;
 end;
 
+function TwwWorld.GetNearestBorder(aPoint: TPoint): TPoint;
+var
+ l_Hor, l_Ver: Integer;
+begin
+  l_Hor:= Min(Size.Width-aPoint.X, aPoint.X);
+  l_Ver:= Min(Size.Height-aPoint.Y, aPoint.Y);
+  if l_Hor < l_Ver then
+  begin
+    Result.X := IfThen(aPoint.X > l_Hor, Size.Width, 0);
+    Result.Y := aPoint.Y;
+  end
+  else
+  begin
+    Result.X := aPoint.X;
+    Result.Y := IfThen(aPoint.Y > l_Ver, Size.Height, 0);
+  end;
+end;
+
 { TwwIdeas }
 
 constructor TwwIdeas.Create(aWorld: TwwWorld; const aLength: Integer);
 begin
- inherited Create(aWorld, 0);
+ inherited Create;
  Variety:= -1;
 end;
 

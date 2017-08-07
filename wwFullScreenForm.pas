@@ -116,7 +116,7 @@ begin
   begin
    l_T:= FWorld.Things[i];
 
-   if l_T.IsLive then
+   if l_T.IsAlive then
    begin
     for k:= 0 to Pred(l_T.Length) do
     begin

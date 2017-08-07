@@ -111,7 +111,7 @@ end;
 
 function Equal(A, B: TPoint): Boolean;
 begin
-  Equal:= (A.X = B.X) and (A.Y = B.Y);
+  Result:= A = B// (A.X = B.X) and (A.Y = B.Y);
 end;
 
 
@@ -143,12 +143,12 @@ end;
 function InvertDir(ADir: TwwDirection): TwwDirection;
 begin
   case ADir of
-    dtUp   : InvertDir:= dtDown;
-    dtRight: InvertDir:= dtLeft;
-    dtDown : InvertDir:= dtUp;
-    dtLeft : InvertDir:= dtRight;
+    dtUp   : Result:= dtDown;
+    dtRight: Result:= dtLeft;
+    dtDown : Result:= dtUp;
+    dtLeft : Result:= dtRight;
   else
-    InvertDir:= ADir;
+    Result:= ADir;
   end;
 end;
 
@@ -158,8 +158,8 @@ var
   Delta: TPoint;
   i: Integer;
 begin
-  Delta.X:= FromPoint.X - ToPoint.X;
-  Delta.Y:= FromPoint.Y - ToPoint.Y;
+  Result:= dtStop;
+  Delta:= FromPoint - ToPoint;
 
   if (Delta.X <> 0) and (Delta.Y <> 0) then
   begin
@@ -180,8 +180,9 @@ begin
   else
   if Delta.Y < 0 then
     Delta.Y:= 1;
+
   Result:= dtStop;
-  for i:= Ord(dtStop) to Ord(High(TwwDirection)) do
+  for i:= Ord(dtLeft) to Ord(High(TwwDirection)) do
    if Equal(AddPoint[TwwDirection(i)], Delta) then
    begin
     Result:= TwwDirection(i);

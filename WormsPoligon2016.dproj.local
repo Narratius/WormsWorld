@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899.12.30 00:00:00.000.872,=C:\Users\Дмитрий\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.147,D:\Clouds\GitHub\ww\WormsPoligon2016.dproj=C:\Users\Дмитрий\Documents\Embarcadero\Studio\Projects\Project2.dproj</Transaction>
     <Transaction>1899.12.30 00:00:00.000.460,=C:\Users\Дмитрий\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.147,D:\Clouds\GitHub\ww\WormsPoligon2016.dproj=C:\Users\Дмитрий\Documents\Embarcadero\Studio\Projects\Project2.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.367,=C:\#My Work\WormsWorld\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.328,C:\#My Work\WormsWorld\wwCrazyApple.pas=C:\#My Work\WormsWorld\Unit1.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.143,=D:\Clouds\GitHub\ww\PoligonForm.pas</Transaction>
-    <Transaction>2017.08.01 09:59:28.367,=C:\#My Work\WormsWorld\Unit1.pas</Transaction>
-    <Transaction>2017.08.01 09:59:53.328,C:\#My Work\WormsWorld\wwCrazyApple.pas=C:\#My Work\WormsWorld\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.872,=C:\Users\Дмитрий\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
   </Transactions>
 </BorlandProject>

@@ -6,7 +6,7 @@ interface
 type
  TwwDirection = (dtNone, dtStop, dtLeft, dtUp, dtRight, dtDown);
  TwwDirections = set of TwwDirection;
- TwwEntity = (weLive, weNotLive);
+ TwwEntity = (weLive, weNotLive, weThink);
  TwwEntities = set of TwwEntity;
  TCurve = (ctNone, ctUp, ctDown, ctLeft, ctRight,
            ctLeftUp, ctLeftDown, ctRightUp, ctRightDown);

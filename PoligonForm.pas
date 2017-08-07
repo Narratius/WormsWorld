@@ -24,6 +24,7 @@ type
     MapGrid: TDrawGrid;
     CheckBox1: TCheckBox;
     Worms8ImageList: TImageList;
+    procedure Button1Click(Sender: TObject);
     procedure StartButtonClick(Sender: TObject);
     procedure StopButtonClick(Sender: TObject);
     procedure MapButtonClick(Sender: TObject);
@@ -52,6 +53,17 @@ implementation
 {$R *.dfm}
 Uses
  Types, wwClasses, wwTypes, wwUtils;
+
+procedure TPoligonMainForm.Button1Click(Sender: TObject);
+var
+ l_From, l_To: TPoint;
+ l_Dir: TwwDirection;
+begin
+  // Проверка CalcDir
+  l_From:= Point(40, 0);
+  l_To:= Point(45, 4);
+  l_Dir:= CalcDir(l_From, l_To, ftVertical);
+end;
 
 procedure TPoligonMainForm.StartButtonClick(Sender: TObject);
 var
@@ -141,8 +153,10 @@ begin
      end; // for i
      if FMapVisible then
      begin
-    //  MapGrid.Invalidate;
-    //  WorldPaintBox.Invalidate;
+      (* *)
+      MapGrid.Invalidate;
+      (* *)
+      //WorldPaintBox.Invalidate;
       if f_FSForm.Visible then
        f_FSForm.Invalidate
       else
@@ -164,6 +178,8 @@ begin
    Itm.SubItems.Add(IntToStr(FWorld.MindCenter.Minds[i].AverageLength));
    Itm.SubItems.Add(IntToStr(FWorld.MindCenter.Minds[i].MaxThingLength));
    Itm.SubItems.Add(IntToStr(FWorld.MindCenter.Minds[i].Weight)+'%');
+   Itm.SubItems.Add('');
+   Itm.SubItems.Add(BoolToStr(FWorld.MindCenter.Minds[i].Enabled, True));
   end; // for i
  finally
   FWorld.Free;
@@ -185,12 +201,10 @@ var
  l_Form: TFSForm;
 begin
  FMapVisible:= not FMapVisible;
-
+ (*  *)
  if FMapVisible then
- begin
    f_FSForm.Show;
- end;
-
+ (* *)
  (*
  if FMapVisible then
  begin
@@ -202,7 +216,7 @@ begin
   ClientHeight:= GroupBox2.Top+GroupBox2.Height+10;
   Width:=550;
  end;
-*)
+ *)
 end;
 
 procedure TPoligonMainForm.FormClose(Sender: TObject; var Action: TCloseAction);

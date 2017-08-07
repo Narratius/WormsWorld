@@ -100,7 +100,7 @@ begin
     end
     else
      break
-   until False;
+  until False;
  end;
  Result:= l_NewDir;
 end;

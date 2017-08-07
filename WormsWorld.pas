@@ -52,8 +52,8 @@ implementation
 
 Uses
  SysUtils, VCL.Forms,
- wwDummyMind, wwUtils, wwSimpleMind, wwMaratMinds, wwStarMind,
- wwFirst;
+ wwTypes, wwDummyMind, wwUtils, wwSimpleMind, wwMaratMinds, wwStarMind,
+ wwFirst, wwCrazyApple;
 
 { TWormsField }
 
@@ -75,6 +75,7 @@ begin
    AddMind(TGourmetMind.Create);
    AddMind(TAStarMind.Create);
    AddMind(TFirstMind.Create);
+   AddMind(TCrazyAppleMind.Create(weNotLive));
   end;
 end;
 
@@ -151,7 +152,7 @@ begin
   for i:= 0 to Pred(Count) do
   begin
    l_T:= Things[i];
-   if (l_T is TwwWorm) and l_T.IsLive then
+   if (l_T is TwwWorm) and l_T.IsAlive then
     Inc(Result);
   end;
 end;
@@ -170,7 +171,7 @@ begin
    RessurectTargets;
   for i:= 0 to Pred(TargetCount) do
   begin
-   if not Targets[i].IsLive then
+   if not Targets[i].IsAlive then
      Targets[i].Ressurect;
    begin
     l_TD:= CalcDistance(aPoint, Targets[i].Head.Position);
@@ -199,7 +200,7 @@ begin
    RessurectWorms;
   for i:= 0 to Pred(WormsCount) do
   begin
-   if Worms[i].IsLive then
+   if Worms[i].IsAlive then
    begin
     l_TD:= CalcDistance(aPoint, Worms[i].Head.Position);
     if l_TD < MinDelta then
@@ -224,7 +225,7 @@ begin
     RessurectTargets;
   for i:= 0 to Pred(TargetCount) do
   begin
-    if (Targets[i].Power > l_Power) and Targets[i].IsLive then
+    if (Targets[i].Power > l_Power) and Targets[i].IsAlive then
     begin
      l_Power:= Targets[i].Power;
      l_I:= i;
@@ -287,12 +288,13 @@ begin
     Inc(i);
   end;
   for i:= 0 to Pred(MaxTargetCount) do
-   AddThing(TwwTarget.Create(Self));
+   AddThing(TwwTarget.Create(MindCenter));
 end;
 
 procedure TWormsField.SetMaxWormsCount(const Value: Integer);
 var
   i: Integer;
+  l_W: TwwWorm;
 begin
   FMaxWormsCount := Value;
   i:= 0;
@@ -304,7 +306,11 @@ begin
     Inc(i);
   end;
   for i:= 0 to Pred(MaxWormsCount) do
-   AddThing(TwwWorm.Create(Self, FMindCenter, i));
+  begin
+   l_W:= TwwWorm.Create(FMindCenter);
+   l_W.Variety:= i;
+   AddThing(l_W);
+  end;
 end;
 
 procedure TWormsField.Update;

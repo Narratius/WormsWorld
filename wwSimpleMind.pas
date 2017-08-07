@@ -140,6 +140,12 @@ function TLazyMind.Thinking: TwwDirection;
 begin
   TwwWorm(Thing).Target:= (Thing.World as TWormsField).NearestTarget(Thing.Head.Position);
   Result:= inherited Thinking;
+  (*
+  if TwwWorm(Thing).Favorite = ftVertical then
+   TwwWorm(Thing).Favorite := ftHorizontal
+  else
+   TwwWorm(Thing).Favorite := ftVertical;
+  *)
 end;
 
 {
