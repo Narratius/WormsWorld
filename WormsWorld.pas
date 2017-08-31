@@ -2,7 +2,7 @@ unit WormsWorld;
 
 interface
 Uses
- Types,
+ Types, SyncObjs,
  wwClasses, wwWorms, wwMinds;
 
 type
@@ -13,6 +13,7 @@ type
     FMaxTargetCount: Integer;
     FMaxWormsCount: Integer;
     FMindCenter: TwwMindCenter;
+    f_CS: TCriticalSection;
     function GetTargetCount: Integer;
     function GetTargets(Index: Integer): TwwTarget;
     function GetWorms(Index: Integer): TwwWorm;
@@ -47,7 +48,7 @@ type
     property Worms[Index: Integer]: TwwWorm read GetWorms;
     property WormsCount: Integer read GetWormsCount;
   end;
-  
+
 implementation
 
 Uses
@@ -73,15 +74,17 @@ begin
    AddMind(TSimpletonMind.Create);
    AddMind(TLazyMind.Create);
    AddMind(TGourmetMind.Create);
-   AddMind(TAStarMind.Create);
+   AddMind(TAStarMind.Create); (*
    AddMind(TFirstMind.Create);
-   AddMind(TCrazyAppleMind.Create(weNotLive));
+   AddMind(TCrazyAppleMind.Create(weNotLive)); *)
   end;
+  f_CS := TCriticalSection.Create();
 end;
 
 destructor TWormsField.Destroy;
 begin
-  FMindCenter.Free;
+  FreeAndNil(f_CS);
+  FreeAndNil(FMindCenter);
   inherited Destroy;
 end;
 
@@ -167,21 +170,16 @@ begin
   Result := nil;
   MinIndex:= -1;
   MinDelta:= High(MinDelta);
-  if TargetCount = 0 then
-   RessurectTargets;
+  RessurectTargets;
   for i:= 0 to Pred(TargetCount) do
   begin
-   if not Targets[i].IsAlive then
-     Targets[i].Ressurect;
-   begin
     l_TD:= CalcDistance(aPoint, Targets[i].Head.Position);
     if l_TD < MinDelta then
     begin
      MinDelta:= l_TD;
      MinIndex:= i;
     end;
-   end;
-  end;
+  end; // for i
   if MinIndex > -1 then
    Result:= Targets[MinIndex];
 end;
@@ -221,11 +219,10 @@ var
 begin
   l_Power:= 0;
   Result:= nil;
-  if TargetCount = 0 then
-    RessurectTargets;
+  RessurectTargets;
   for i:= 0 to Pred(TargetCount) do
   begin
-    if (Targets[i].Power > l_Power) and Targets[i].IsAlive then
+    if (Targets[i].Power > l_Power) then
     begin
      l_Power:= Targets[i].Power;
      l_I:= i;
@@ -236,6 +233,7 @@ end;
 
 function TWormsField.RandomTarget(const aPoint: TPoint): TwwTarget;
 begin
+  RessurectTargets;
   Result:= Targets[Random(TargetCount)];
 end;
 
@@ -253,7 +251,8 @@ var
   i: Integer;
 begin
   for i:= 0 to Pred(MaxTargetCount) do
-   Targets[i].Ressurect;
+   if not Targets[i].IsAlive then
+     Targets[i].Ressurect;
 end;
 
 procedure TWormsField.RessurectWorms;
@@ -288,7 +287,7 @@ begin
     Inc(i);
   end;
   for i:= 0 to Pred(MaxTargetCount) do
-   AddThing(TwwTarget.Create(MindCenter));
+   AddThing(TwwTarget.Create(MindCenter, f_CS));
 end;
 
 procedure TWormsField.SetMaxWormsCount(const Value: Integer);
@@ -307,7 +306,7 @@ begin
   end;
   for i:= 0 to Pred(MaxWormsCount) do
   begin
-   l_W:= TwwWorm.Create(FMindCenter);
+   l_W:= TwwWorm.Create(FMindCenter, f_CS);
    l_W.Variety:= i;
    AddThing(l_W);
   end;

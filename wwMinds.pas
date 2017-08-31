@@ -2,7 +2,7 @@ unit wwMinds;
 
 interface
 Uses
- Contnrs, IniFiles,
+ Contnrs, IniFiles, Classes,
  wwClasses, wwTypes, System.Types;
 
 type
@@ -32,7 +32,9 @@ type
   property Thing: TwwThing
    read f_CurrentThing;
  public
-  constructor Create(aEntity: TwwEntity = weLive);
+  constructor Create; virtual;
+  procedure Assign(Source: TwwMind);
+  procedure AssignMaxValues(Source: TwwMind);
   function Think(aFor: TwwThing): TwwDirection;
   function FindTarget(aThing: TwwThing): TwwThing; virtual;
   function IsLegal(aPoint: TPoint): Boolean;
@@ -79,8 +81,9 @@ type
  public
   constructor Create(aDataFileName: String); reintroduce;
   destructor Destroy; override;
-  function RandomMind(aEntity: TwwEntity = weLive): TwwMind;
   procedure AddMind(aMind: TwwMind);
+  procedure PostMorten(aMind: TwwMind);
+  function RandomMind(aEntity: TwwEntity = weLive): TwwMind;
   procedure RegisterMind(aMind: TwwMindClass; aEntity: TwwEntity);
   procedure Resort;
   property Minds[Index: Integer]: TwwMind
@@ -91,7 +94,7 @@ implementation
 
 Uses
  Math,
- WormsWorld, wwWorms, wwUtils;
+ WormsWorld, wwWorms, wwUtils, System.SysUtils;
 
 { TwwMind }
 
@@ -102,13 +105,13 @@ end;
 
 function TwwMind.IsBusy(const aPOint: TPoint): Boolean;
 begin
- Result:= f_CurrentThing.IsBusy(aPoint);
+ Result:= f_CurrentThing.World.IsBusy(aPoint);
 end;
 
 function TwwMind.IsFree(const aPOint: TPoint; aEntity: TwwEntities = [weLive]):
     Boolean;
 begin
- Result:= f_CurrentThing.IsFree(aPoint);
+ Result:= f_CurrentThing.World.IsFree(aPoint);
 end;
 
 function TwwMind.IsMe(const aPoint: TPoint): Boolean;
@@ -120,22 +123,19 @@ function TwwMind.Think(aFor: TwwThing): TwwDirection;
 begin
  FMaxThingLength:= Max(aFor.Length, MaxThingLength);
  FMaxThingAge:= Max(FMaxThingAge, aFor.Age);
-
+ Result:= dtNone;
  f_CurrentThing:= aFor;
  if (Thing <> nil){ and (Thing is TwwWorm)} then
  begin
-  if (Thing is TwwWorm) and ((TwwWorm(Thing).Target = nil) or (TwwWorm(Thing).Target.IsDead)) then
-   TwwWorm(Thing).Target:= FindTarget(Thing);
-  Result:= Thinking;
- end
- else
-  Result:= dtNone;
+  if (Thing is TwwWorm) and ((TwwWorm(Thing).Target <> nil){ or (TwwWorm(Thing).Target.IsDead)}) then
+    Result:= Thinking;
+ end;
 end;
 
-constructor TwwMind.Create(aEntity: TwwEntity);
+constructor TwwMind.Create;
 begin
   inherited Create;
-  fEntity:= aEntity;
+  fEntity:= weLive;
 end;
 
 function TwwMind.FindTarget(aThing: TwwThing): TwwThing;
@@ -183,6 +183,28 @@ begin
  end;
 end;
 
+procedure TwwMind.Assign(Source: TwwMind);
+begin
+  FMaxThingLength:= Source.MaxThingLength;
+  FMaxThingAge:= Source.MaxThingAge;
+  FWeight:= Source.Weight;
+  FTotalLength:= Source.TotalLength;
+  FTotalAge:= Source.TotalAge;
+  FTotalWorms:= Source.TotalWorms;
+  FAverageThinkTime:= Source.AverageThinkTime;
+end;
+
+procedure TwwMind.AssignMaxValues(Source: TwwMind);
+begin
+  FMaxThingLength:= Max(MaxThingLength, Source.MaxThingLength);
+  FMaxThingAge:= Max(MaxThingAge, Source.MaxThingAge);
+  FWeight:= Max(Weight, Source.Weight);
+  FTotalLength:= TotalLength + Source.TotalLength;
+  FTotalAge:= TotalAge + Source.TotalAge;
+  FTotalWorms:= TotalWorms + Source.TotalWorms;
+  FAverageThinkTime:= Max(AverageThinkTime, Source.AverageThinkTime);
+end;
+
 function TwwMind.CheckPoint(From: TPoint; Dir: TwwDirection; aEntity:
     TwwEntities = [weLive]): Boolean;
 begin
@@ -223,7 +245,7 @@ var
 begin
  for i:=0 to Pred(Count) do
   Minds[i].WriteValues(FDataFile);
- FDataFile.Free;
+ FreeAndNil(FDataFile);
   inherited;
 end;
 
@@ -232,14 +254,26 @@ begin
  Result:= TwwMind(Items[Index]);
 end;
 
+procedure TwwMindCenter.PostMorten(aMind: TwwMind);
+var
+ i: Integer;
+begin
+ if aMind <> nil then
+  for I := 0 to Pred(Count) do
+    if Minds[i].ClassNameIs(aMind.ClassName) then
+    begin
+      Minds[i].AssignMaxValues(aMind);
+      break;
+    end;
+end;
+
 function TwwMindCenter.RandomMind(aEntity: TwwEntity = weLive): TwwMind;
 var
  l_Total, l_Weight: Integer;
  i,j, l_index: Integer;
  l_Arr: array[0..99] of Integer;
 begin
- if Count > 0 then
- begin
+ Result:= nil;
   l_Total:= 0;
   FillChar(l_arr, SizeOf(l_Arr), 0);
   for i:= 0 to Pred(Count) do
@@ -252,26 +286,26 @@ begin
       Inc(l_Total, Minds[i].AverageLength);
     end;
   end; // for i
-  l_index:= 0;
-  for i:= 0 to Pred(Count) do
+  if l_total > 0 then
   begin
-   if Minds[i].Enabled and (Minds[i].Entity = aEntity) then
-   begin
-     if Minds[i].AverageLength = 0 then
-      l_Weight:= Round(50*100 / l_Total)
-     else
-      l_Weight:= Round(Minds[i].AverageLength*100 / l_Total);
-     for j:= l_index to Pred(Min(100, l_index+l_Weight)) do
-      l_Arr[j]:= i;
-     Inc(l_Index, l_Weight);
-     Minds[i].Weight:= l_Weight;
-   end; // Minds[i].Enabled
-  end; // for i
-  l_index:= RandomFrom(l_Arr);
-  Result:= Minds[l_index];
- end
- else
-  Result:= nil;
+    l_index:= 0;
+    for i:= 0 to Pred(Count) do
+    begin
+     if Minds[i].Enabled and (Minds[i].Entity = aEntity) then
+     begin
+       if Minds[i].AverageLength = 0 then
+        l_Weight:= Round(50*100 / l_Total)
+       else
+        l_Weight:= Round(Minds[i].AverageLength*100 / l_Total);
+       for j:= l_index to Pred(Min(100, l_index+l_Weight)) do
+        l_Arr[j]:= i;
+       Inc(l_Index, l_Weight);
+       Minds[i].Weight:= l_Weight;
+     end; // Minds[i].Enabled
+    end; // for i
+    l_index:= RandomFrom(l_Arr);
+    Result:= Minds[l_index];
+  end; // l_Total > 0
 end;
 
 procedure TwwMindCenter.AddMind(aMind: TwwMind);

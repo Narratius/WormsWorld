@@ -133,23 +133,28 @@ begin
   FWorld.MaxWormsCount:= Succ(WormsCountCombo.ItemIndex);
   FWorld.InstantRessurectTargets:= True;
   FWorld.InstantRessurectWorms:= True;
-  FWorld.OnNewIdea:= NewIdea;
 
   f_FSForm:= TFSForm.Create(Application);
   try
     f_FSForm.World:= fWorld;
 
     FCancel:= False; FShowIdeas:= False;
+    FWorld.Start;
     repeat
-     FWorld.Update;
+     //FWorld.Update;
      for i:= 0 to Pred(FWorld.WormsCount) do
      begin
-      itm:= StatisticView.Items[i];
-      itm.Caption:= FWorld.Worms[i].Mind.Caption;
-      itm.SubItems.Strings[0]:= IntToStr(FWorld.Worms[i].Length);
-      itm.SubItems.Strings[1]:= IntToStr(FWorld.Worms[i].Mind.MaxThingLength);
-      itm.SubItems.Strings[2]:= IntToStr(FWorld.Worms[i].Mind.Weight)+'%';
-      Itm.SubItems.Strings[3]:= IntToStr(FWorld.Worms[i].Age);
+      with StatisticView.Items[i] do
+      begin
+       if FWorld.Worms[i].Mind <> nil then
+       begin
+        Caption:= FWorld.Worms[i].Mind.Caption;
+        SubItems.Strings[0]:= IntToStr(FWorld.Worms[i].Length);
+        SubItems.Strings[1]:= IntToStr(FWorld.Worms[i].Mind.MaxThingLength);
+        SubItems.Strings[2]:= IntToStr(FWorld.Worms[i].Mind.Weight)+'%';
+        SubItems.Strings[3]:= IntToStr(FWorld.Worms[i].Age);
+       end;
+      end;
      end; // for i
      if FMapVisible then
      begin
@@ -163,8 +168,9 @@ begin
        FMapVisible:= False;
      end;
      Application.ProcessMessages;
-     Sleep(25);
+     //Sleep(25);
     until FCancel;
+    FWorld.Stop;
   finally
     FreeAndNil(f_FSForm);
   end;

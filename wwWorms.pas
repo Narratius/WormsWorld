@@ -2,7 +2,7 @@ unit wwWorms;
 
 interface
 Uses
- Types,
+ Types, SyncObjs,
  wwClasses, wwTypes, wwMinds;
 
 type
@@ -11,13 +11,15 @@ type
     f_Mind: TwwMind;
     f_MindCenter: TwwMindCenter;
     f_Direction: TwwDirection;
+    procedure ChangeMind;
   protected
     function Eat(const aPoint: TPoint): Boolean; virtual;
     procedure Move; virtual;
     procedure WhileStop; virtual;
     procedure Think; virtual;
   public
-    constructor Create(aMindCenter: TwwMindCenter); reintroduce; virtual;
+    constructor Create(aMindCenter: TwwMindCenter; aLock: TCriticalSection); reintroduce; virtual;
+    destructor Destroy; override;
     procedure Update; override;
     procedure Ressurect; override;
   public
@@ -33,7 +35,7 @@ type
   protected
     procedure Think; override;
   public
-    constructor Create(aMindCenter: TwwMindCenter); override;
+    constructor Create(aMindCenter: TwwMindCenter; aLock: TCriticalSection); override;
     procedure Ressurect; override;
     property Power: Integer read FPower;
   end;
@@ -53,7 +55,7 @@ type
     procedure Think; override;
     procedure WhileStop; override;
   public
-    constructor Create(aMindCenter: TwwMindCenter); override;
+    constructor Create(aMindCenter: TwwMindCenter; aLock: TCriticalSection); override;
     procedure Die; override;
     function Eat(const aPOint: TPoint): Boolean; override;
     function IsNeck(const aPoint: TPoint): Boolean;
@@ -72,7 +74,7 @@ implementation
 
 Uses
  Math,
- wwUtils;
+ wwUtils, SysUtils, System.TypInfo;
 
 const
  MinWormLength = 5;
@@ -81,14 +83,14 @@ const
  TargetPower : array[0..1] of Integer = (5, 3);
  MaxStopTurns = 3;
 
-{ TwwWorm }
-
+type
+  RwwMind = class of TwwMind;
 {
 *********************************** TwwWorm ************************************
 }
-constructor TwwWorm.Create(aMindCenter: TwwMindCenter);
+constructor TwwWorm.Create(aMindCenter: TwwMindCenter; aLock: TCriticalSection);
 begin
-  inherited Create(aMindCenter);
+  inherited Create(aMindCenter, aLock);
   Caption:= 'Worm';
   Entity:= weLive;
 end;
@@ -102,11 +104,13 @@ begin
  l_T:= World.ThingAt(aPoint);
  if (l_T <> nil) and (l_T.Entity = weNotLive) then
  begin
-  Enlarge(TwwTarget(Target).Power);
+  Enlarge(TwwTarget(l_T).Power);
   Inc(FTargetCount);
-  Target.Die;
+  l_T.Die;
+  if Target = l_T then
+    FindTarget;
   Result:= True;
- end
+ end;
 
  (*
  if Equal(aPoint, Target.Head.Position) then
@@ -161,7 +165,12 @@ begin
  if f_Mind <> nil then
  begin
   Caption:= f_Mind.Caption;
-  Target:= f_Mind.FindTarget(Self) ;
+  f_CS.Acquire;
+  try
+    Target:= f_Mind.FindTarget(Self) ;
+  finally
+    f_CS.Release
+  end;
  end;
  Head.Value:= ws_HeadL;
  for i:= 1 to Length-2 do
@@ -251,9 +260,9 @@ end;
 {
 ********************************** TwwTarget ***********************************
 }
-constructor TwwTarget.Create(aMindCenter: TwwMindCenter);
+constructor TwwTarget.Create(aMindCenter: TwwMindCenter; aLock: TCriticalSection);
 begin
-  inherited Create(aMindCenter);
+  inherited Create(aMindCenter, aLock);
   Caption:= 'Target';
   Entity:= weNotLive;
 end;
@@ -328,9 +337,9 @@ end;
 {
 *********************************** TwwThinkingThing ************************************
 }
-constructor TwwThinkingThing.Create(aMindCenter: TwwMindCenter);
+constructor TwwThinkingThing.Create(aMindCenter: TwwMindCenter; aLock: TCriticalSection);
 begin
-  inherited Create;
+  inherited Create(aLock);
   Caption:= 'ThinkingThing';
   Entity:= weLive;
   f_MindCenter:= aMindCenter;
@@ -348,14 +357,12 @@ begin
   else
   begin
    l_Head:= MovePoint(Head.Position, Direction);
-
    if World.IsLegal(l_Head) and
-      (IsFree(l_Head, [weLive, weNotLive]) or Eat(l_Head)) then
+      (Eat(l_Head) or World.IsFree(l_Head, [weLive, weNotLive])) then
    begin
     for i:= Pred(Length) downto 1 do
      Points[i].Position:= Points[Pred(i)].Position;
     Head.Position:= l_Head;
-
    end
    else
     Die;
@@ -366,15 +373,51 @@ end;
 procedure TwwThinkingThing.Ressurect;
 begin
   inherited;
-  f_Mind:= f_MindCenter.RandomMind(Entity);
+  f_MindCenter.PostMorten(f_Mind);
+  ChangeMind;
+end;
+
+
+destructor TwwThinkingThing.Destroy;
+begin
+  FreeAndNil(f_Mind);
+  inherited;
+end;
+
+(*
+function TddCustomConfigNode.Clone(anOwner: TObject = nil): Pointer;
+  {virtual;}
+  {-}
+begin
+ Result := RddBaseConfigNode(ClassType).Create(Alias, Caption);
+ TddCustomConfigNode(Result).Assign(Self);
+end;
+*)
+procedure TwwThinkingThing.ChangeMind;
+var
+  l_Mind: TwwMind;
+begin
+  FreeAndNil(f_Mind);
+  l_Mind := f_MindCenter.RandomMind(Entity);
+  if l_Mind <> nil then
+  begin
+    f_Mind := RwwMind(l_Mind.ClassType).Create;
+  end;
 end;
 
 procedure TwwThinkingThing.Think;
 begin
- if f_Mind <> nil then
-  Direction:= f_Mind.Think(Self)
- else
-  Direction:= dtNone;
+ f_CS.Acquire;
+ try
+   if f_Mind = nil then
+     ChangeMind;
+   if f_Mind <> nil then
+    Direction:= f_Mind.Think(Self)
+   else
+    Direction:= dtNone;
+ finally
+   f_CS.Release
+ end;
 end;
 
 procedure TwwThinkingThing.Update;
@@ -382,6 +425,7 @@ begin
  inherited;
  Think;
  Move;
+ //Sleep(25);
 end;
 
 procedure TwwThinkingThing.WhileStop;
@@ -392,7 +436,7 @@ end;
 
 function TwwThinkingThing.Eat(const aPoint: TPoint): Boolean;
 begin
- Result:= IsFree(aPoint);
+ Result:= World.IsFree(aPoint); // ?????
 end;
 
 

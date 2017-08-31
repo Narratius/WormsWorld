@@ -4,8 +4,8 @@ unit wwClasses;
 interface
 
 Uses
- Types, Contnrs, Classes,
- wwTypes;
+ Contnrs, Classes, SyncObjs,
+ wwTypes, System.Types;
 
 const
   MapHeight = 499;
@@ -19,7 +19,7 @@ Type
  end;
 
  TwwWorld = class;
- TwwThing = class(TObject)
+ TwwThing = class(TThread)
  private
   f_Points: TObjectList;
   f_IsDead: Boolean;
@@ -41,16 +41,17 @@ Type
   procedure SetIsAlive(const Value: Boolean);
   procedure SetLength(const Value: Integer);
  protected
+  f_CS: TCriticalSection;
+ protected
   function GetDefaultLength: Integer; virtual;
+  procedure Execute; override;
  public
-  constructor Create;
+  constructor Create(aLock: TCriticalSection);
   destructor Destroy; override;
   procedure Enlarge(const aDelta: Integer);
   function IsMe(const aPoint: TPoint): Boolean;
   procedure Update; virtual;
   procedure Die; virtual;
-  function IsFree(const aPOint: TPoint; aWhat: TwwEntities = [weLive]): Boolean;
-  function IsBusy(const aPOint: TPoint): Boolean;
   procedure Ressurect; virtual;
   function PointIndex(aPoint: TPoint): Integer;
   procedure AddPoint(aPoint: TPoint);
@@ -85,24 +86,12 @@ Type
   property AbsoluteIndex: Integer read FAbsoluteIndex;
  end;
 
- TwwIdeas = class(TwwThing)
- private
-
- protected
-
- public
-  constructor Create(aWorld: TwwWorld; const aLength: Integer);
-  procedure Ressurect; override;
- end;
-
  TwwWorld = class
  private
   f_Things: TObjectList;
   f_Bounds: TRect;
-  f_Ideas : TwwIdeas;
-  f_OnNewIdea: TNotifyEvent;
-  FNotIdea: Boolean;
   FMap: array[0..MapWidth, 0..MapHeight] of Integer;
+
   function GetCount: Integer;
   function GetThings(Index: Integer): TwwThing;
   procedure AddThingToMap(aThing: TwwThing);
@@ -120,9 +109,11 @@ Type
   function GetFree: TPoint;
   function ThingAt(const aPoint: TPoint): TwwThing;
   procedure Update; virtual;
+  procedure Start;
+  procedure Stop;
   procedure DeleteThing(aIndex: Integer);
   procedure AddThing(aThing: TwwThing);
-  function GetNearestBorder(aPoint: TPoint): TPoint;
+  function GetNearestBorder(aPoint: TPoint; aDir: TwwFavoriteType): TPoint;
   function IsLegal(aPoint: TPoint): Boolean;
  public
   property Count: Integer
@@ -131,9 +122,6 @@ Type
    read GetThings;
   property Size: TRect
    read f_Bounds;
-  property OnNewIdea: TNotifyEvent
-   read f_OnNewIdea
-   write f_OnNewIdea;
  end;
 
 implementation
@@ -153,23 +141,28 @@ end;
 
 constructor TwwThing.Create;
 begin
- inherited Create;
+ inherited Create(True);
+ Priority:= tpLower;
+
  f_Points:= TObjectList.Create;
  f_Caption:= '';
  f_DefaultLength:= 1;
  Entity:= weNotLive;
  f_InstantRessurrect:= True;
+ f_CS := aLock;
 end;
 
 destructor TwwThing.Destroy;
 begin
- f_Points.Free;
-  inherited;
+ FreeAndNil(f_Points);
+ inherited;
 end;
 
 procedure TwwThing.Die;
 begin
  IsDead:= True;
+ if InstantRessurrect then
+   Ressurect;
 end;
 
 procedure TwwThing.Enlarge(const aDelta: Integer);
@@ -202,6 +195,15 @@ begin
     break;
    end; // Length <= DefaultLenght
   end;
+ end;
+end;
+
+procedure TwwThing.Execute;
+begin
+ while not Terminated do
+ begin
+  Update;
+
  end;
 end;
 
@@ -265,40 +267,27 @@ end;
 
 procedure TwwThing.Update;
 begin
- if IsDead and InstantRessurrect then
-   Ressurect;
- Inc(FAge);
+ if IsAlive then
+   Inc(FAge);
 end;
 
-
-function TwwThing.IsBusy(const aPOint: TPoint): Boolean;
-begin
- if World <> nil then
-   Result:= World.IsBusy(aPoint)
- else
-   Result:= True;
-end;
-
-function TwwThing.IsFree(const aPOint: TPoint; aWhat: TwwEntities = [weLive]):
-    Boolean;
-begin
- if World <> nil then
-   Result:= World.IsFree(aPoint, aWhat)
- else
-   Result:= False;
-end;
 
 
 procedure TwwThing.Ressurect;
 begin
- FAge:= 0;
- IsAlive:= False;
- if World <> nil then
- begin
-   IsAlive:= True;
-   Length:= DefaultLength;
-   Head.Position:= World.GetFree;
- end; // World <> nil
+ f_CS.Acquire;
+ try
+   FAge:= 0;
+   IsAlive:= False;
+   if World <> nil then
+   begin
+     IsAlive:= True;
+     Length:= DefaultLength;
+     Head.Position:= World.GetFree;
+   end; // World <> nil
+ finally
+   f_CS.Release;
+ end;
 end;
 
 function TwwThing.GetDefaultLength: Integer;
@@ -312,13 +301,18 @@ var
  i: Integer;
 begin
  Result := -1;
- if IsAlive then
- for i:= Pred(Length) downto 0 do
-  if Equal(Points[i].Position, aPoint) then
-  begin
-   Result:= i;
-   break;
-  end;
+ f_CS.Acquire;
+ try
+   if IsAlive then
+   for i:= Pred(Length) downto 0 do
+    if Equal(Points[i].Position, aPoint) then
+    begin
+     Result:= i;
+     break;
+    end;
+ finally
+   f_CS.Release;
+ end;
 end;
 
 procedure TwwThing.AddPoint(aPoint: TPoint);
@@ -332,20 +326,17 @@ end;
 
 { TwwWorld }
 
-constructor TwwWorld.Create;
+constructor TwwWorld.Create(const aBounds: TRect);
 begin
  inherited Create;
  f_Things:= TObjectList.Create;
  f_Bounds:= aBounds;
- f_Ideas:= TwwIdeas.Create(Self, 0);
- FNotIdea:= False;
  ClearMap;
 end;
 
 destructor TwwWorld.Destroy;
 begin
- f_Ideas.Free;
- f_Things.Free;
+ FreeAndNil(f_Things);
  inherited;
 end;
 
@@ -365,39 +356,41 @@ var
 begin
  aThing:= nil;
  Result:= False;
- if IsLegal(aPoint) then
- begin
-  i:= FMap[aPoint.X, aPoint.Y];
-  if i > -1 then
-  begin
-   
-   l_T:= Things[i];
-   if l_T.Entity in aWhat then
+   if IsLegal(aPoint) then
    begin
-    aThing:= l_T;
+    (*
+    i:= FMap[aPoint.X, aPoint.Y];
+    if i > -1 then
+    begin
+
+     l_T:= Things[i];
+     if l_T.Entity in aWhat then
+     begin
+      aThing:= l_T;
+      Result:= True;
+     end;
+    end; // i > -1
+    *)
+
+    for i:= 0 to Pred(Count) do
+     if Things[i].IsMe(aPoint) and (Things[i].Entity in aWhat) then
+     begin
+      Result:= True;
+      aThing:= Things[i];
+      break;
+     end;
+
+    (*
+    if not FNotIdea then
+    begin
+     f_Ideas.AddPoint(aPoint);
+     if Assigned(f_OnNewIdea) then
+      f_OnNewIdea(Self);
+    end;
+    *)
+   end
+   else
     Result:= True;
-   end; 
-  end; // i > -1
-  (*
-  for i:= 0 to Pred(Count) do
-   if Things[i].IsMe(aPoint) and (Things[i].Entity in aWhat) then
-   begin
-    Result:= True;
-    aThing:= Things[i];
-    break;
-   end;
-  *)
-  (*
-  if not FNotIdea then
-  begin
-   f_Ideas.AddPoint(aPoint);
-   if Assigned(f_OnNewIdea) then
-    f_OnNewIdea(Self);
-  end;
-  *)
- end
- else
-  Result:= True;
 end;
 
 function TwwWorld.IsFree(const aPOint: TPoint; aWhat: TwwEntities = [weLive]):
@@ -411,16 +404,8 @@ var
  l_T: TwwThing;
 begin
  Result:= nil;
- FNotIdea:= True;
- try
-  if IsBusy(aPoint, l_T, [weLive, weNotLive]) then
+ if IsBusy(aPoint, l_T, [weLive, weNotLive]) then
    Result:= l_T
-  else
-   if f_Ideas.IsMe(aPoint) then
-    Result:= f_Ideas;
- finally
-  FNotIdea:= False;
- end
 end;
 
 function TwwWorld.GetCount: Integer;
@@ -439,28 +424,33 @@ end;
 function TwwWorld.GetThings(Index: Integer): TwwThing;
 begin
  if InRange(Index, 0, Pred(Count)) then
-  Result:= TwwThing(f_Things.Items[Index]);
+  Result:= TwwThing(f_Things.Items[Index])
+ else
+  Result:= nil;
 end;
 
 procedure TwwWorld.Update;
 var
- i, j: Integer;
+ i: Integer;
  l_T: TwwThing;
 begin
  ClearMap;
+ // Червяки и цели - работает ли это?
  for i:= 0 to Pred(Count) do
  begin
   l_T:= Things[i];
   if l_T.IsAlive then
    AddThingToMap(l_T);
  end; // for i
+
+ (* В многопоточном режиме смысла не имеет
  for i:= 0 to Pred(Count) do
  begin
-  f_Ideas.Ressurect;
   Things[i].Update;
   if Things[i].IsDead then
    Ressurect(Things[i]);
  end;
+ *)
 end;
 
 procedure TwwWorld.Ressurect(aThing: TwwThing);
@@ -468,13 +458,25 @@ begin
  aThing.Ressurect;
 end;
 
-procedure TwwWorld.DeleteThing(aIndex: Integer);
+procedure TwwWorld.Start;
 var
- l_O: TObject;
+ i: Integer;
 begin
- l_O:= f_Things.Items[aIndex];
+ for I := 0 to Pred(f_Things.Count) do
+  TwwThing(f_Things[i]).Start;
+end;
+
+procedure TwwWorld.Stop;
+var
+ i: Integer;
+begin
+ for I := 0 to Pred(f_Things.Count) do
+  TwwThing(f_Things[i]).Terminate;
+end;
+
+procedure TwwWorld.DeleteThing(aIndex: Integer);
+begin
  f_Things.Delete(aIndex);
- FreeAndNil(l_O);
 end;
 
 procedure TwwWorld.AddThing(aThing: TwwThing);
@@ -488,8 +490,6 @@ end;
 function TwwWorld.IsLegal(aPoint: TPoint): Boolean;
 begin
  Result:= f_Bounds.Contains(aPoint);
-// Result := InRange(aPoint.X, f_Bounds.Left, f_Bounds.Right) and
-//           InRange(aPoint.Y, f_Bounds.Top, f_Bounds.Bottom);
 end;
 
 procedure TwwWorld.AddThingToMap(aThing: TwwThing);
@@ -504,40 +504,31 @@ procedure TwwWorld.ClearMap;
 var
  i, j: Integer;
 begin
+ FillChar(FMap, SizeOf(FMap), -1);
+ (*
  for i:= 0 to MapWidth do
   for j:= 0 to MapHeight do
    FMap[i, j]:= -1;
+ *)
 end;
 
-function TwwWorld.GetNearestBorder(aPoint: TPoint): TPoint;
+function TwwWorld.GetNearestBorder(aPoint: TPoint; aDir: TwwFavoriteType):
+    TPoint;
 var
  l_Hor, l_Ver: Integer;
 begin
   l_Hor:= Min(Size.Width-aPoint.X, aPoint.X);
   l_Ver:= Min(Size.Height-aPoint.Y, aPoint.Y);
-  if l_Hor < l_Ver then
+  if aDir = ftVertical then
   begin
-    Result.X := IfThen(aPoint.X > l_Hor, Size.Width, 0);
-    Result.Y := aPoint.Y;
+    Result.X:= aPoint.X;
+    Result.Y := IfThen(aPoint.Y > l_Ver, Size.Height, 0);
   end
   else
   begin
-    Result.X := aPoint.X;
-    Result.Y := IfThen(aPoint.Y > l_Ver, Size.Height, 0);
+    Result.X := IfThen(aPoint.X > l_Hor, Size.Width, 0);
+    Result.Y := aPoint.Y;
   end;
-end;
-
-{ TwwIdeas }
-
-constructor TwwIdeas.Create(aWorld: TwwWorld; const aLength: Integer);
-begin
- inherited Create;
- Variety:= -1;
-end;
-
-procedure TwwIdeas.Ressurect;
-begin
- Length:= 0;
 end;
 
 end.

@@ -42,6 +42,8 @@ function IsTurn(A, B: TPoint): Boolean;
 function InvertFavorite(aFavorite: TwwFavoriteType): TwwFavoriteType;
 { Инвертирует приоритетное направление }
 
+function Direction2FavType(aDir: TwwDirection): TwwFavoriteType;
+
 implementation
 
 const
@@ -226,6 +228,17 @@ begin
   Result:= ftHorizontal
  else
   Result:= ftVertical;
+end;
+
+function Direction2FavType(aDir: TwwDirection): TwwFavoriteType;
+begin
+  if aDir in [dtLeft, dtRight] then
+    Result := ftHorizontal
+  else
+  if aDir in [dtUp, dtDown] then
+    Result:= ftVertical
+  else
+    Result:= ftHorizontal;
 end;
 
 end.

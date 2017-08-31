@@ -3,7 +3,7 @@ unit wwStarMind;
 interface
 
 uses
-  Types, Contnrs,
+  Types, Contnrs, SyncObjs,
   wwTypes, wwMinds;
 
 type
@@ -45,6 +45,7 @@ type
   private
    f_Open: TwwSOrtedNodeList;
    f_Closed: TwwNodeList;
+   f_CS: TCriticalSection;
   private
     function CalcCost(A, B: TPoint): Integer;
     function FindDir(A, B: TPoint): TwwDirection;
@@ -54,7 +55,7 @@ type
     function GetEnglishCaption: string; override;
     function Thinking: TwwDirection; override;
   public
-   constructor Create;
+   constructor Create; override;
    destructor Destroy; override;
   end;
 
@@ -89,10 +90,12 @@ begin
  inherited Create;
  f_Open:= TwwSOrtedNodeList.Create;
  f_Closed:= TwwNodeList.Create;
+ f_CS:= TCriticalSection.Create;
 end;
 
 destructor TAStarMind.Destroy;
 begin
+ f_CS.Free;
  f_Open.Free;
  f_Closed.Free;
  inherited;
@@ -189,45 +192,45 @@ var
 
 begin
  Result:= dtStop;
- l_Start:= TwwNode.Create(A, A, B);
- f_Open.AddNode(l_Start); // Список владеет объектом l_Start, удалять нельзя
- while f_Open.Count <> 0 do
- begin
-  l_Current:= TwwNode(f_Open.First).Clone; // Сделали копию объекта, потом нужно грохнуть
-  f_Open.RemoveNode(l_Current); // Уничтожили оригинал объекта
-   if Equal(l_Current.Position, B) then
+   l_Start:= TwwNode.Create(A, A, B);
+   f_Open.AddNode(l_Start); // Список владеет объектом l_Start, удалять нельзя
+   while f_Open.Count <> 0 do
    begin
-    CreateRoad(l_Current);
-    l_Current.Free;
-    break;
-   end;
-   for i:= dtLeft to dtDown do
-   begin
-    l_AllowFree:= True;
-    l_NearCurrent:= l_Current.CreateNear(i); // Создали дополнительный объект
-     if IsFree(l_NearCurrent.Position) then
+    l_Current:= TwwNode(f_Open.First).Clone; // Сделали копию объекта, потом нужно грохнуть
+    f_Open.RemoveNode(l_Current); // Уничтожили оригинал объекта
+     if Equal(l_Current.Position, B) then
      begin
-      l_CostFrom:= l_Current.CostFromStart + CalcCost(l_Current.Position, l_NearCurrent.Position);
-      l_Skip:= (f_Open.HaveNode(l_NearCurrent) or f_Closed.HaveNode(l_NearCurrent)) and
-          (l_NearCurrent.CostFromStart <= l_CostFrom);
-      if not l_Skip then
-      begin
-       l_NearCurrent.CostFromStart:= l_CostFrom;
-       f_Closed.RemoveNode(l_NearCurrent); // Удаляем объект, указывающий на Position
-       if not f_Open.HaveNode(l_NearCurrent) then
+      CreateRoad(l_Current);
+      l_Current.Free;
+      break;
+     end;
+     for i:= dtLeft to dtDown do
+     begin
+      l_AllowFree:= True;
+      l_NearCurrent:= l_Current.CreateNear(i); // Создали дополнительный объект
+       if IsFree(l_NearCurrent.Position) then
        begin
-        f_Open.AddNode(l_NearCurrent); // Добавили объект в список, уничтожать нельзя
-        l_AllowFree:= False;
-       end; // not l_Open.HaveNode(l_NearCurrent)
-      end; // подходящий узел
-     end; // IsFree(l_NearCurrent.Position)
-     if l_AllowFree then
-      l_NearCurrent.Free; // Уничтожили дополнительный объект
-   end; // for i
-   f_Closed.AddNode(l_Current); // добавили объект в список
- end; // while l_Open.Count <> 0
- f_Open.Clear;
- f_Closed.Clear;
+        l_CostFrom:= l_Current.CostFromStart + CalcCost(l_Current.Position, l_NearCurrent.Position);
+        l_Skip:= (f_Open.HaveNode(l_NearCurrent) or f_Closed.HaveNode(l_NearCurrent)) and
+            (l_NearCurrent.CostFromStart <= l_CostFrom);
+        if not l_Skip then
+        begin
+         l_NearCurrent.CostFromStart:= l_CostFrom;
+         f_Closed.RemoveNode(l_NearCurrent); // Удаляем объект, указывающий на Position
+         if not f_Open.HaveNode(l_NearCurrent) then
+         begin
+          f_Open.AddNode(l_NearCurrent); // Добавили объект в список, уничтожать нельзя
+          l_AllowFree:= False;
+         end; // not l_Open.HaveNode(l_NearCurrent)
+        end; // подходящий узел
+       end; // IsFree(l_NearCurrent.Position)
+       if l_AllowFree then
+        l_NearCurrent.Free; // Уничтожили дополнительный объект
+     end; // for i
+     f_Closed.AddNode(l_Current); // добавили объект в список
+   end; // while l_Open.Count <> 0
+   f_Open.Clear;
+   f_Closed.Clear;
 end;
 
 function TAStarMind.GetCaption: string;
@@ -247,40 +250,45 @@ var
  l_T: TwwThing;
 begin
  l_W:= Thing as TwwWorm;
- l_W.Target:= (Thing.World as TWormsField).NearestTarget(Thing.Head.Position);
- if IsBusy(l_W.Target.Head.Position) then
- begin
-  l_T:= l_W.Target;
-  for i:= 0 to Pred((Thing.World as TWormsField).TargetCount) do
-  begin
-   if (Thing.World as TWormsField).Targets[i] <> l_T then
+ try
+   l_W.Target:= (Thing.World as TWormsField).NearestTarget(Thing.Head.Position);
+   if IsBusy(l_W.Target.Head.Position) then
    begin
-    l_W.Target:= (Thing.World as TWormsField).Targets[i];
-    if IsFree(l_W.Target.Head.Position) then
-     break;
-   end
-  end;
+    l_T:= l_W.Target;
+    for i:= 0 to Pred((Thing.World as TWormsField).TargetCount) do
+    begin
+     if (Thing.World as TWormsField).Targets[i] <> l_T then
+     begin
+      l_W.Target:= (Thing.World as TWormsField).Targets[i];
+      if IsFree(l_W.Target.Head.Position) then
+       break;
+     end
+    end;
+   end;
+   Result:= FindDir(l_W.Head.Position, l_W.Target.Head.Position);
+   if Result = dtStop then
+   begin
+    l_T:= l_W.Target;
+    for i:= 0 to Pred((Thing.World as TWormsField).TargetCount) do
+    begin
+     if (Thing.World as TWormsField).Targets[i] <> l_T then
+     begin
+      l_W.Target:= (Thing.World as TWormsField).Targets[i];
+      Result:= FindDir(l_W.Head.Position, l_W.Target.Head.Position);
+      if Result <> dtStop then
+       break;
+     end; // (Thing.World as TWormsField).Targets[i] <> l_T
+    end; // for i
+    if Result = dtStop then
+    begin
+     l_W.Target:= l_T;
+     Result:= DummyThing;
+    end; // Result = dtStop
+   end; // Result = dtStop
+ finally
+  f_CS.Release;
  end;
- Result:= FindDir(l_W.Head.Position, l_W.Target.Head.Position);
- if Result = dtStop then
- begin
-  l_T:= l_W.Target;
-  for i:= 0 to Pred((Thing.World as TWormsField).TargetCount) do
-  begin
-   if (Thing.World as TWormsField).Targets[i] <> l_T then
-   begin
-    l_W.Target:= (Thing.World as TWormsField).Targets[i];
-    Result:= FindDir(l_W.Head.Position, l_W.Target.Head.Position);
-    if Result <> dtStop then
-     break;
-   end; // (Thing.World as TWormsField).Targets[i] <> l_T
-  end; // for i
-  if Result = dtStop then
-  begin
-   l_W.Target:= l_T;
-   Result:= DummyThing;
-  end; // Result = dtStop
- end; // Result = dtStop
+
 end;
 
 {

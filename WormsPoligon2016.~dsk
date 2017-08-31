@@ -1,84 +1,39 @@
 ﻿[Closed Files]
-File_0=TSourceModule,'c:\program files (x86)\embarcadero\studio\17.0\source\rtl\common\System.Classes.pas',0,1,6988,1,7004,0,0,,
-File_1=TSourceModule,'c:\program files (x86)\embarcadero\studio\17.0\SOURCE\RTL\SYS\System.SysUtils.pas',0,1,12205,1,12223,0,0,,
-File_2=TSourceModule,'c:\program files (x86)\embarcadero\studio\17.0\SOURCE\VCL\Vcl.Controls.pas',0,1,5814,1,5834,0,0,,
-File_3=TSourceModule,'c:\program files (x86)\embarcadero\studio\17.0\SOURCE\VCL\Vcl.Graphics.pas',0,1,68,46,77,0,0,,
-File_4=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\User Interface\LowLevel3D\LowLevel3DFrm.pas',0,1,154,1,1,0,0,,
-File_5=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\Physics\FMXSimplePhysics\uSimulationFmxCtrls.pas',0,1,1,14,7,0,0,,
-File_6=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\Physics\FMXSimplePhysics\uFormFmxPhysics.pas',0,1,1,1,1,0,0,,
-File_7=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\Physics\Box2DHello\uFormBox2DHelloWorld.pas',0,1,1,14,40,0,0,,
-File_8=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\User Interface\ControlsDesktop\ctrlsdemofrm.pas',0,1,1,1,1,0,0,,
-File_9=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\Parallel Library\FMX\LifeUnitFmx.pas',0,1,128,95,157,0,0,,
-File_10=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\Parallel Library\Shared_Code\LifeEngine.pas',0,1,52,5,371,0,0,,
-File_11=TSourceModule,'D:\Clouds\GitHub\quide\gvsdk\sources\GVDLL.pas',0,1,3406,11,3426,0,0,,
-File_12=TSourceModule,'D:\Clouds\GitHub\ww\TFGame.pas',0,1,1,6,6,0,0,,
-File_13=TSourceModule,'D:\Clouds\GitHub\ww\wwGVAdapter.PAS',0,1,5,28,7,0,0,,
+File_0=TSourceModule,'c:\program files (x86)\embarcadero\studio\17.0\SOURCE\RTL\SYS\System.Types.pas',0,1,130,73,132,0,0,,
+File_1=TSourceModule,'c:\program files (x86)\embarcadero\studio\17.0\SOURCE\RTL\SYS\System.SysUtils.pas',0,1,21982,1,21998,0,0,,
+File_2=TSourceModule,'c:\program files (x86)\embarcadero\studio\17.0\source\rtl\common\System.Contnrs.pas',0,1,296,1,314,0,0,,
+File_3=TSourceModule,'c:\program files (x86)\embarcadero\studio\17.0\SOURCE\VCL\Vcl.Controls.pas',0,1,5814,1,5834,0,0,,
+File_4=TSourceModule,'c:\program files (x86)\embarcadero\studio\17.0\SOURCE\VCL\Vcl.Graphics.pas',0,1,68,46,77,0,0,,
+File_5=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\User Interface\LowLevel3D\LowLevel3DFrm.pas',0,1,154,1,1,0,0,,
+File_6=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\Physics\FMXSimplePhysics\uSimulationFmxCtrls.pas',0,1,1,14,7,0,0,,
+File_7=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\Physics\FMXSimplePhysics\uFormFmxPhysics.pas',0,1,1,1,1,0,0,,
+File_8=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\Physics\Box2DHello\uFormBox2DHelloWorld.pas',0,1,1,14,40,0,0,,
+File_9=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\User Interface\ControlsDesktop\ctrlsdemofrm.pas',0,1,1,1,1,0,0,,
+File_10=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\Parallel Library\FMX\LifeUnitFmx.pas',0,1,128,95,157,0,0,,
+File_11=TSourceModule,'C:\Users\Public\Documents\Embarcadero\Studio\18.0\Samples\Object Pascal\Multi-Device Samples\Parallel Library\Shared_Code\LifeEngine.pas',0,1,52,5,371,0,0,,
+File_12=TSourceModule,'D:\Clouds\GitHub\quide\gvsdk\sources\GVDLL.pas',0,1,3406,11,3426,0,0,,
+File_13=TSourceModule,'D:\Clouds\GitHub\ww\TFGame.pas',0,1,1,6,6,0,0,,
 
 [Modules]
-Module0=C:\#My Work\WormsWorld\wwCrazyApple.pas
-Module1=C:\#My Work\WormsWorld\wwSimpleMind.pas
-Module2=C:\#My Work\WormsWorld\wwDummyMind.pas
-Module3=C:\#My Work\WormsWorld\wwMinds.pas
-Module4=C:\#My Work\WormsWorld\PoligonForm.pas
+Module0=C:\#My Work\WormsWorld\wwStarMind.pas
+Module1=C:\#My Work\WormsWorld\wwWorms.pas
+Module2=C:\#My Work\WormsWorld\wwClasses.pas
+Module3=C:\#My Work\WormsWorld\wwFirst.pas
+Module4=C:\#My Work\WormsWorld\wwMinds.pas
 Module5=C:\#My Work\WormsWorld\wwUtils.pas
-Module6=C:\#My Work\WormsWorld\wwTypes.pas
-Module7=c:\program files (x86)\embarcadero\studio\17.0\SOURCE\RTL\SYS\System.Types.pas
-Module8=C:\#My Work\WormsWorld\wwClasses.pas
-Module9=C:\#My Work\WormsWorld\WormsWorld.pas
-Module10=C:\#My Work\WormsWorld\wwWorms.pas
-Module11=c:\program files (x86)\embarcadero\studio\17.0\SOURCE\RTL\SYS\System.pas
-Module12=C:\#My Work\WormsWorld\wwFullScreenForm.pas
-Module13=C:\#My Work\WormsWorld\wwFirst.pas
-Module14=c:\program files (x86)\embarcadero\studio\17.0\source\rtl\common\System.Contnrs.pas
+Module6=C:\#My Work\WormsWorld\wwDummyMind.pas
+Module7=C:\#My Work\WormsWorld\WormsWorld.pas
+Module8=c:\program files (x86)\embarcadero\studio\17.0\source\rtl\common\System.Classes.pas
+Module9=C:\#My Work\WormsWorld\wwCrazyApple.pas
+Module10=C:\#My Work\WormsWorld\PoligonForm.pas
+Module11=C:\#My Work\WormsWorld\wwTypes.pas
+Module12=c:\program files (x86)\embarcadero\studio\17.0\SOURCE\RTL\SYS\System.pas
+Module13=C:\#My Work\WormsWorld\wwSimpleMind.pas
+Module14=C:\#My Work\WormsWorld\wwFullScreenForm.pas
 Count=15
 EditWindowCount=1
 
-[C:\#My Work\WormsWorld\wwCrazyApple.pas]
-ModuleType=TSourceModule
-FormState=0
-FormOnTop=0
-
-[C:\#My Work\WormsWorld\wwSimpleMind.pas]
-ModuleType=TSourceModule
-FormState=0
-FormOnTop=0
-
-[C:\#My Work\WormsWorld\wwDummyMind.pas]
-ModuleType=TSourceModule
-FormState=0
-FormOnTop=0
-
-[C:\#My Work\WormsWorld\wwMinds.pas]
-ModuleType=TSourceModule
-FormState=0
-FormOnTop=0
-
-[C:\#My Work\WormsWorld\PoligonForm.pas]
-ModuleType=TSourceModule
-FormState=1
-FormOnTop=0
-
-[C:\#My Work\WormsWorld\wwUtils.pas]
-ModuleType=TSourceModule
-FormState=0
-FormOnTop=0
-
-[C:\#My Work\WormsWorld\wwTypes.pas]
-ModuleType=TSourceModule
-FormState=0
-FormOnTop=0
-
-[c:\program files (x86)\embarcadero\studio\17.0\SOURCE\RTL\SYS\System.Types.pas]
-ModuleType=TSourceModule
-FormState=0
-FormOnTop=0
-
-[C:\#My Work\WormsWorld\wwClasses.pas]
-ModuleType=TSourceModule
-FormState=0
-FormOnTop=0
-
-[C:\#My Work\WormsWorld\WormsWorld.pas]
+[C:\#My Work\WormsWorld\wwStarMind.pas]
 ModuleType=TSourceModule
 FormState=0
 FormOnTop=0
@@ -88,7 +43,62 @@ ModuleType=TSourceModule
 FormState=0
 FormOnTop=0
 
+[C:\#My Work\WormsWorld\wwClasses.pas]
+ModuleType=TSourceModule
+FormState=0
+FormOnTop=0
+
+[C:\#My Work\WormsWorld\wwFirst.pas]
+ModuleType=TSourceModule
+FormState=0
+FormOnTop=0
+
+[C:\#My Work\WormsWorld\wwMinds.pas]
+ModuleType=TSourceModule
+FormState=0
+FormOnTop=0
+
+[C:\#My Work\WormsWorld\wwUtils.pas]
+ModuleType=TSourceModule
+FormState=0
+FormOnTop=0
+
+[C:\#My Work\WormsWorld\wwDummyMind.pas]
+ModuleType=TSourceModule
+FormState=0
+FormOnTop=0
+
+[C:\#My Work\WormsWorld\WormsWorld.pas]
+ModuleType=TSourceModule
+FormState=0
+FormOnTop=0
+
+[c:\program files (x86)\embarcadero\studio\17.0\source\rtl\common\System.Classes.pas]
+ModuleType=TSourceModule
+FormState=0
+FormOnTop=0
+
+[C:\#My Work\WormsWorld\wwCrazyApple.pas]
+ModuleType=TSourceModule
+FormState=0
+FormOnTop=0
+
+[C:\#My Work\WormsWorld\PoligonForm.pas]
+ModuleType=TSourceModule
+FormState=1
+FormOnTop=0
+
+[C:\#My Work\WormsWorld\wwTypes.pas]
+ModuleType=TSourceModule
+FormState=0
+FormOnTop=0
+
 [c:\program files (x86)\embarcadero\studio\17.0\SOURCE\RTL\SYS\System.pas]
+ModuleType=TSourceModule
+FormState=0
+FormOnTop=0
+
+[C:\#My Work\WormsWorld\wwSimpleMind.pas]
 ModuleType=TSourceModule
 FormState=0
 FormOnTop=0
@@ -98,19 +108,9 @@ ModuleType=TSourceModule
 FormState=1
 FormOnTop=0
 
-[C:\#My Work\WormsWorld\wwFirst.pas]
-ModuleType=TSourceModule
-FormState=0
-FormOnTop=0
-
-[c:\program files (x86)\embarcadero\studio\17.0\source\rtl\common\System.Contnrs.pas]
-ModuleType=TSourceModule
-FormState=0
-FormOnTop=0
-
 [EditWindow0]
 ViewCount=15
-CurrentEditView=C:\#My Work\WormsWorld\wwCrazyApple.pas
+CurrentEditView=C:\#My Work\WormsWorld\wwStarMind.pas
 View0=0
 View1=1
 View2=2
@@ -144,13 +144,13 @@ BorlandEditorCodeExplorer=BorlandEditorCodeExplorer@EditWindow0
 TopPanelSize=0
 LeftPanelSize=1896
 LeftPanelClients=PropertyInspector,DockSite3
-LeftPanelData=00000800010100000000040F0000000000000168070000000000000100000000590D000009000000446F636B53697465330100000000B11A00001100000050726F7065727479496E73706563746F72FFFFFFFF
+LeftPanelData=00000800010100000000040F00000000000001680700000000000001000000005C0E000009000000446F636B53697465330100000000B11A00001100000050726F7065727479496E73706563746F72FFFFFFFF
 RightPanelSize=2000
 RightPanelClients=DockSite2,DockSite4
 RightPanelData=00000800010100000000040F00000000000001D00700000000000001000000004412000009000000446F636B53697465320100000000B11A000009000000446F636B5369746534FFFFFFFF
 BottomPanelSize=1519
 BottomPanelClients=DockSite1,MessageView
-BottomPanelData=00000800010200000000724500000000000002EF050000000000000100000000B922000009000000446F636B53697465310100000000724500000F0000004D65737361676556696577466F726DFFFFFFFF
+BottomPanelData=0000080001020100000009000000446F636B5369746531724500000000000002EF050000000000000100000000724500000F0000004D65737361676556696577466F726DFFFFFFFF
 BottomMiddlePanelSize=0
 BottomMiddlePanelClients=DockSite0,GraphDrawingModel
 BottomMiddelPanelData=0000080001020200000009000000446F636B536974653010000000477261706844726177696E67566965779F1D00000000000002F206000000000000FFFFFFFF
@@ -158,12 +158,12 @@ BottomMiddelPanelData=0000080001020200000009000000446F636B5369746530100000004772
 [View0]
 CustomEditViewType=TEditView
 Module=C:\#My Work\WormsWorld\PoligonForm.pas
-CursorX=25
-CursorY=181
-TopLine=160
+CursorX=1
+CursorY=146
+TopLine=138
 LeftCol=1
 Elisions=
-Bookmarks={7,251,1}
+Bookmarks={7,253,1}
 EditViewName=C:\#My Work\WormsWorld\PoligonForm.pas
 
 [View1]
@@ -180,9 +180,9 @@ EditViewName=C:\#My Work\WormsWorld\wwFullScreenForm.pas
 [View2]
 CustomEditViewType=TEditView
 Module=C:\#My Work\WormsWorld\WormsWorld.pas
-CursorX=29
-CursorY=9
-TopLine=5
+CursorX=1
+CursorY=235
+TopLine=286
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -191,26 +191,37 @@ EditViewName=C:\#My Work\WormsWorld\WormsWorld.pas
 [View3]
 CustomEditViewType=TEditView
 Module=C:\#My Work\WormsWorld\wwClasses.pas
-CursorX=57
-CursorY=526
-TopLine=497
+CursorX=11
+CursorY=45
+TopLine=13
 LeftCol=1
 Elisions=
-Bookmarks={7,98,2}{9,520,1}
+Bookmarks={7,32,13}{9,580,1}
 EditViewName=C:\#My Work\WormsWorld\wwClasses.pas
 
 [View4]
 CustomEditViewType=TEditView
 Module=C:\#My Work\WormsWorld\wwWorms.pas
-CursorX=1
-CursorY=280
-TopLine=264
+CursorX=27
+CursorY=197
+TopLine=193
 LeftCol=1
 Elisions=
-Bookmarks={7,91,1}
+Bookmarks={7,373,24}
 EditViewName=C:\#My Work\WormsWorld\wwWorms.pas
 
 [View5]
+CustomEditViewType=TEditView
+Module=C:\#My Work\WormsWorld\wwStarMind.pas
+CursorX=11
+CursorY=194
+TopLine=175
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=C:\#My Work\WormsWorld\wwStarMind.pas
+
+[View6]
 CustomEditViewType=TEditView
 Module=C:\#My Work\WormsWorld\wwFirst.pas
 CursorX=3
@@ -221,29 +232,29 @@ Elisions=
 Bookmarks=
 EditViewName=C:\#My Work\WormsWorld\wwFirst.pas
 
-[View6]
+[View7]
 CustomEditViewType=TEditView
 Module=c:\program files (x86)\embarcadero\studio\17.0\SOURCE\RTL\SYS\System.pas
-CursorX=1
-CursorY=16241
-TopLine=16223
+CursorX=30
+CursorY=16130
+TopLine=16149
 LeftCol=1
 Elisions=
 Bookmarks=
 EditViewName=c:\program files (x86)\embarcadero\studio\17.0\SOURCE\RTL\SYS\System.pas
 
-[View7]
+[View8]
 CustomEditViewType=TEditView
 Module=C:\#My Work\WormsWorld\wwDummyMind.pas
-CursorX=14
-CursorY=13
-TopLine=3
+CursorX=25
+CursorY=9
+TopLine=1
 LeftCol=1
 Elisions=
 Bookmarks=
 EditViewName=C:\#My Work\WormsWorld\wwDummyMind.pas
 
-[View8]
+[View9]
 CustomEditViewType=TEditView
 Module=C:\#My Work\WormsWorld\wwSimpleMind.pas
 CursorX=5
@@ -254,18 +265,18 @@ Elisions=
 Bookmarks=
 EditViewName=C:\#My Work\WormsWorld\wwSimpleMind.pas
 
-[View9]
+[View10]
 CustomEditViewType=TEditView
 Module=C:\#My Work\WormsWorld\wwCrazyApple.pas
-CursorX=39
-CursorY=81
-TopLine=72
+CursorX=2
+CursorY=61
+TopLine=52
 LeftCol=1
 Elisions=
-Bookmarks=
+Bookmarks={7,39,1}
 EditViewName=C:\#My Work\WormsWorld\wwCrazyApple.pas
 
-[View10]
+[View11]
 CustomEditViewType=TEditView
 Module=C:\#My Work\WormsWorld\wwTypes.pas
 CursorX=21
@@ -276,52 +287,42 @@ Elisions=
 Bookmarks=
 EditViewName=C:\#My Work\WormsWorld\wwTypes.pas
 
-[View11]
+[View12]
 CustomEditViewType=TEditView
 Module=C:\#My Work\WormsWorld\wwUtils.pas
 CursorX=1
-CursorY=184
-TopLine=161
+CursorY=115
+TopLine=99
 LeftCol=1
 Elisions=
-Bookmarks=
+Bookmarks={7,235,1}
 EditViewName=C:\#My Work\WormsWorld\wwUtils.pas
-
-[View12]
-CustomEditViewType=TEditView
-Module=c:\program files (x86)\embarcadero\studio\17.0\SOURCE\RTL\SYS\System.Types.pas
-CursorX=1
-CursorY=1459
-TopLine=1457
-LeftCol=1
-Elisions=
-Bookmarks=
-EditViewName=c:\program files (x86)\embarcadero\studio\17.0\SOURCE\RTL\SYS\System.Types.pas
 
 [View13]
 CustomEditViewType=TEditView
 Module=C:\#My Work\WormsWorld\wwMinds.pas
-CursorX=2
-CursorY=5
-TopLine=1
+CursorX=1
+CursorY=131
+TopLine=115
 LeftCol=1
 Elisions=
-Bookmarks={7,102,1}
+Bookmarks={7,114,1}
 EditViewName=C:\#My Work\WormsWorld\wwMinds.pas
 
 [View14]
 CustomEditViewType=TEditView
-Module=c:\program files (x86)\embarcadero\studio\17.0\source\rtl\common\System.Contnrs.pas
+Module=c:\program files (x86)\embarcadero\studio\17.0\source\rtl\common\System.Classes.pas
 CursorX=1
-CursorY=314
-TopLine=296
+CursorY=4684
+TopLine=4668
 LeftCol=1
 Elisions=
 Bookmarks=
-EditViewName=c:\program files (x86)\embarcadero\studio\17.0\source\rtl\common\System.Contnrs.pas
+EditViewName=c:\program files (x86)\embarcadero\studio\17.0\source\rtl\common\System.Classes.pas
 
 [Watches]
-Count=0
+Count=1
+Watch0='l_Mind.ClassType',256,0,18,1,0,'Watches',1
 
 [WatchWindow]
 WatchColumnWidth=120
@@ -333,11 +334,11 @@ Docked=1
 State=0
 Left=0
 Top=0
-Width=4979
+Width=3823
 Height=1115
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=4979
+ClientWidth=3823
 ClientHeight=1115
 TBDockHeight=212
 LRDockWidth=13604
@@ -345,12 +346,8 @@ Dockable=1
 StayOnTop=0
 
 [Breakpoints]
-Count=5
-Breakpoint0='C:\#My Work\WormsWorld\WormsWorld.pas',123,'Result = nil',0,1,'',1,0,0,'',1,'','','',0,''
-Breakpoint1='C:\#My Work\WormsWorld\WormsWorld.pas',187,'Result = nil',0,1,'',1,0,0,'',1,'','','',0,''
-Breakpoint2='C:\#My Work\WormsWorld\WormsWorld.pas',235,'Result = nil',0,1,'',1,0,0,'',1,'','','',0,''
-Breakpoint3='C:\#My Work\WormsWorld\wwCrazyApple.pas',112,'(Result = l_DirToWorm) and (Result <> dtNone)',0,1,'',1,0,0,'',1,'','','',0,''
-Breakpoint4='C:\#My Work\WormsWorld\wwCrazyApple.pas',73,'l_DirToWorm = dtStop',0,1,'',1,0,0,'',1,'','','',0,''
+Count=1
+Breakpoint0='C:\#My Work\WormsWorld\wwCrazyApple.pas',122,'(Result = l_DirToWorm) and (Result <> dtNone)',0,1,'',1,0,0,'',1,'','','',0,''
 
 [EmbarcaderoWin32Debugger_AddressBreakpoints]
 Count=0
@@ -415,13 +412,13 @@ Create=1
 Visible=1
 Docked=1
 State=0
-Left=960
+Left=0
 Top=23
-Width=5000
+Width=10000
 Height=1356
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=5000
+ClientWidth=10000
 ClientHeight=1356
 TBDockHeight=1356
 LRDockWidth=2771
@@ -514,13 +511,13 @@ Visible=1
 Docked=1
 State=0
 Left=0
-Top=392
+Top=420
 Width=1896
-Height=3327
+Height=3058
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=1896
-ClientHeight=3327
+ClientHeight=3058
 TBDockHeight=6462
 LRDockWidth=1896
 Dockable=1
@@ -535,11 +532,11 @@ Docked=1
 State=0
 Left=0
 Top=0
-Width=4979
+Width=3823
 Height=1115
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=4979
+ClientWidth=3823
 ClientHeight=1115
 TBDockHeight=413
 LRDockWidth=4953
@@ -554,11 +551,11 @@ Docked=1
 State=0
 Left=0
 Top=0
-Width=4979
+Width=3823
 Height=1115
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=4979
+ClientWidth=3823
 ClientHeight=1115
 TBDockHeight=212
 LRDockWidth=7406
@@ -577,11 +574,11 @@ Docked=1
 State=0
 Left=0
 Top=0
-Width=4979
+Width=3823
 Height=1115
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=4979
+ClientWidth=3823
 ClientHeight=1115
 TBDockHeight=1538
 LRDockWidth=3484
@@ -596,11 +593,11 @@ Docked=1
 State=0
 Left=0
 Top=0
-Width=4979
+Width=3823
 Height=1115
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=4979
+ClientWidth=3823
 ClientHeight=1115
 TBDockHeight=2067
 LRDockWidth=3484
@@ -813,11 +810,11 @@ Docked=1
 State=0
 Left=0
 Top=0
-Width=4979
+Width=3823
 Height=1115
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=4979
+ClientWidth=3823
 ClientHeight=1115
 TBDockHeight=1548
 LRDockWidth=8740
@@ -839,38 +836,16 @@ Docked=1
 State=0
 Left=0
 Top=0
-Width=948
-Height=6221
+Width=1896
+Height=3558
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=948
-ClientHeight=6221
+ClientWidth=1896
+ClientHeight=3558
 TBDockHeight=3683
 LRDockWidth=1896
 Dockable=1
 StayOnTop=0
-
-[MIDEXForm]
-PercentageSizes=1
-Create=1
-Visible=1
-Docked=1
-State=0
-Left=0
-Top=0
-Width=1896
-Height=3048
-MaxLeft=-1
-MaxTop=-1
-ClientWidth=1896
-ClientHeight=3048
-TBDockHeight=7769
-LRDockWidth=1464
-Dockable=1
-StayOnTop=0
-Layout=0
-Split=30
-ContentsClosed=0
 
 [ModelViewTool]
 PercentageSizes=1
@@ -942,23 +917,23 @@ HostDockSite=DockBottomPanel
 DockSiteType=1
 PercentageSizes=1
 Create=1
-Visible=1
+Visible=0
 Docked=1
 State=0
 Left=0
 Top=23
-Width=4979
+Width=3823
 Height=1356
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=4979
+ClientWidth=3823
 ClientHeight=1356
 TBDockHeight=1356
 LRDockWidth=3823
 Dockable=1
 StayOnTop=0
 TabPosition=1
-ActiveTabID=WatchWindow
+ActiveTabID=DebugLogView
 TabDockClients=DebugLogView,BreakpointWindow,ThreadStatusWindow,CallStackWindow,WatchWindow,LocalVarsWindow
 
 [DockSite2]
@@ -996,18 +971,18 @@ State=0
 Left=0
 Top=23
 Width=1896
-Height=3288
+Height=3558
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=1896
-ClientHeight=3288
+ClientHeight=3558
 TBDockHeight=6462
 LRDockWidth=1896
 Dockable=1
 StayOnTop=0
 TabPosition=1
-ActiveTabID=MIDEXForm
-TabDockClients=StructureView,MIDEXForm,ClassBrowserTool
+ActiveTabID=StructureView
+TabDockClients=StructureView,ClassBrowserTool
 
 [DockSite4]
 HostDockSite=DockRightPanel
